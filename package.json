@@ -1,0 +1,21 @@
+{
+  "name": "brakebit",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "prepare:packages": "pnpm --filter @brakebit/shared build && pnpm --filter @brakebit/db generate && pnpm --filter @brakebit/db build",
+    "dev": "pnpm prepare:packages && turbo run dev --parallel --filter=@brakebit/web --filter=@brakebit/api",
+    "build": "pnpm prepare:packages && turbo run build",
+    "lint": "turbo run lint",
+    "db:generate": "pnpm --filter @brakebit/db generate",
+    "db:migrate": "pnpm --filter @brakebit/db migrate:dev",
+    "db:studio": "pnpm --filter @brakebit/db studio"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

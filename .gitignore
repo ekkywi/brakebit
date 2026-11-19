@@ -1,0 +1,34 @@
+# dependencies
+node_modules
+.pnpm-store
+
+# builds
+dist
+.next
+.turbo
+out
+build
+coverage
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs / OS
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# prisma
+packages/db/prisma/*.db
+packages/db/prisma/*.db-journal
+
+# misc
+*.tsbuildinfo
+.vercel
