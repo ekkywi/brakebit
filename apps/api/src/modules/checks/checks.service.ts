@@ -12,12 +12,16 @@ export class ChecksService {
   private readonly solanaProvider = new SolanaTokenProvider();
 
   async createCheck(dto: CreateCheckDto): Promise<RiskReport> {
-    const chain = dto.chain ?? 'ethereum';
-    // Stub path: one provider feeds sample signals for every selected chain.
-    const { input, sources } = await this.solanaProvider.fetchScoreInput(
-      dto.address,
-    );
+    const chain = dto.chain ?? 'solana';
+
+    const { input, sources, notes, token } =
+      await this.solanaProvider.fetchScoreInput(dto.address);
     const scored = computeRiskScore(input);
+
+    const baseFreshness =
+      'Mint authority, freeze authority, top-holder share, mint age (when history is short enough), and display metadata are read from Solana RPC / DAS when available. Liquidity and LP lock are not measured yet.';
+    const freshnessNote =
+      notes.length > 0 ? `${baseFreshness} ${notes.join(' ')}` : baseFreshness;
 
     return {
       address: dto.address,
@@ -29,9 +33,13 @@ export class ChecksService {
       signals: scored.signals,
       sources,
       checkedAt: new Date().toISOString(),
-      freshnessNote:
-        'This report currently uses sample signal data for local development. Live source timestamps will appear here once on-chain providers are connected.',
+      freshnessNote,
       disclaimer: DISCLAIMER,
+      token: {
+        name: token.name,
+        symbol: token.symbol,
+        imageUrl: token.imageUrl,
+      },
     };
   }
 }

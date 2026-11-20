@@ -10,7 +10,7 @@ Agents continuing this repo on another machine: read this file first for folder 
 brakebit/
 ├── apps/
 │   ├── web/                 Next.js 15 App Router UI (Geist)
-│   └── api/                 NestJS API (checks, health)
+│   └── api/                 NestJS API (checks, tokens search, health)
 ├── packages/
 │   ├── shared/              Shared types + chain metadata
 │   └── db/                  Prisma schema + client (Neon/Postgres)
@@ -39,10 +39,10 @@ apps/web/
     │   └── globals.css      Tokens, light/dark, components
     ├── features/
     │   └── token-check/     Token review feature slice
-    │       ├── components/  TokenCheckForm, RiskReportView
+    │       ├── components/  TokenCheckForm, RiskReportView, ReportSkeleton
     │       ├── hooks/       Reserved for feature hooks (.gitkeep)
-    │       ├── lib/         Address helpers, formatters
-    │       └── api.ts       Client → Nest `/checks`
+    │       ├── lib/         Address helpers, explorers, formatters
+    │       └── api.ts       Client → Nest `/checks` + `/tokens/search`
     └── shared/
         ├── config/          Public env (API base URL)
         ├── content/         Product copy (landing + check)
@@ -55,14 +55,17 @@ apps/web/
 
 ```text
 apps/api/src/
-├── common/dto/              Shared Nest DTOs if needed
-├── config/                  API config
+├── common/
+│   ├── dto/                 Shared Nest DTOs if needed
+│   └── guards/              ChecksThrottlerGuard (friendly 429)
+├── config/                  Env load + API config
 ├── infrastructure/prisma/   Prisma wiring
 └── modules/
     ├── checks/              Token check module
     │   ├── domain/          Pure scoring / report builders
     │   ├── dto/             CreateCheckDto, etc.
-    │   └── providers/       Chain providers (stub + future RPC)
+    │   └── providers/       Solana (mint/holders/age/metadata) + helpers
+    ├── tokens/              Token name/symbol search (Jupiter proxy)
     └── health/              Health endpoint
 ```
 

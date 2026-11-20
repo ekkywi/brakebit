@@ -17,7 +17,7 @@ export class ChecksController {
   async create(@Body() body: unknown) {
     try {
       const dto = CreateCheckDto.parse(body);
-      return this.checksService.createCheck(dto);
+      return await this.checksService.createCheck(dto);
     } catch (error) {
       throw new BadRequestException({
         code: 'INVALID_CHECK_REQUEST',

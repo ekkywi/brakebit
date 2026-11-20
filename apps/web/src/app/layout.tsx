@@ -39,9 +39,6 @@ export default function RootLayout({
               <Link href="/#features" className="nav-link hidden sm:inline">
                 Product
               </Link>
-              <Link href="/#signals" className="nav-link hidden md:inline">
-                Signals
-              </Link>
               <Link href="/#how" className="nav-link hidden sm:inline">
                 How it works
               </Link>

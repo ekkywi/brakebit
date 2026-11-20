@@ -1,34 +1,28 @@
-import { getChainMeta, type Chain } from "@brakebit/shared";
+const MINT_MIN = 32;
+const MINT_MAX = 64;
 
-export function isAddressReady(address: string, chain: Chain): boolean {
+export function isAddressReady(address: string): boolean {
   const value = address.trim();
-  const family = getChainMeta(chain).family;
-
-  if (family === "evm") {
-    return /^0x[a-fA-F0-9]{40}$/.test(value);
-  }
-
-  return value.length >= 32 && value.length <= 64;
+  return value.length >= MINT_MIN && value.length <= MINT_MAX;
 }
 
-export function addressFieldCopy(chain: Chain): {
+export function addressFieldCopy(): {
   label: string;
   placeholder: string;
   hint: string;
 } {
-  const family = getChainMeta(chain).family;
-
-  if (family === "evm") {
-    return {
-      label: "Contract address",
-      placeholder: "0x… token contract address",
-      hint: "Use the token contract address, not a wallet address. Reviews are read-only.",
-    };
-  }
-
   return {
     label: "Mint address",
-    placeholder: "Token mint address",
-    hint: "Use the token mint address, not a wallet address. Reviews are read-only.",
+    placeholder: "Paste a Solana mint address",
+    hint: "Paste a mint, or search by name/symbol below and pick a result.",
   };
+}
+
+export function addressValidationMessage(address: string): string | null {
+  const value = address.trim();
+  if (!value) return null;
+  if (value.length < MINT_MIN || value.length > MINT_MAX) {
+    return "Mint address looks too short or too long for Solana.";
+  }
+  return null;
 }

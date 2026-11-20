@@ -1,12 +1,9 @@
-import { CHAIN_META } from "@brakebit/shared";
-
 /** Product copy for landing and check. Facts only, no fake proof. */
 
-export const NETWORKS = CHAIN_META.map((chain) => ({
-  id: chain.id,
-  label: chain.label,
-  short: chain.short,
-}));
+export const SAMPLE_CHECK = {
+  address: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  note: "Example: BONK mint on Solana (illustrative only)",
+} as const;
 
 export const FEATURES = [
   {
@@ -15,14 +12,14 @@ export const FEATURES = [
       "Each reason names what was found, why it matters, and how severe it looks, so you know what to dig into next.",
   },
   {
-    title: "One score from four signals",
+    title: "Live Solana reads",
     detail:
-      "Supply control, transfer restrictions, liquidity posture, and holder concentration feed a single assessment.",
+      "Mint authority, freeze authority, and top-holder share come from Solana RPC when the mint allows it.",
   },
   {
-    title: "Same report on every chain",
+    title: "Unknown stays unknown",
     detail:
-      "Ethereum, Solana, Base, Arbitrum, BNB Chain, and Polygon share one workspace shape so comparisons stay fair.",
+      "Liquidity, LP lock, and thin data show as unknown instead of invented confidence. A score is directional, not a safety seal.",
   },
   {
     title: "Read-only by design",
@@ -34,21 +31,19 @@ export const FEATURES = [
 export const STEPS = [
   {
     n: "01",
-    title: "Choose the network",
-    detail:
-      "Select where the token lives. Address checks adapt for EVM contracts and Solana mints.",
+    title: "Open a review",
+    detail: "Start from the check workspace. Solana is the network Brakebit reads today.",
   },
   {
     n: "02",
-    title: "Paste the token address",
-    detail:
-      "Use the contract or mint address, not a wallet. Reviews stay read-only.",
+    title: "Paste the mint address",
+    detail: "Use the token mint, not a wallet. Reviews stay read-only.",
   },
   {
     n: "03",
     title: "Read the assessment",
     detail:
-      "Score, numbered findings, and signal details land in one report you can verify against primary sources.",
+      "Score, findings, and signal details land in one report you can verify on Solscan.",
   },
 ] as const;
 
@@ -61,53 +56,41 @@ export const SIGNALS = [
   {
     title: "Transfer restrictions",
     detail:
-      "Whether accounts can be frozen, blacklisted, paused, or otherwise blocked from moving tokens.",
+      "Whether accounts can be frozen or otherwise blocked from moving tokens.",
   },
   {
     title: "Liquidity posture",
     detail:
-      "Cues around lock status, pool depth, and how hard an exit could become.",
+      "Reserved for lock and pool-depth cues when a trustworthy Solana source exists. Unknown for now.",
   },
   {
     title: "Holder concentration",
     detail:
-      "How much supply sits with the largest wallets, and what that means for dump risk.",
+      "How much supply sits with the largest accounts, and what that means for dump risk.",
   },
 ] as const;
 
-export const USE_CASES = [
+/** Merged empty-state panel: coverage + diligence tips. */
+export const CHECK_GUIDANCE = [
   {
-    title: "Before you buy",
-    detail:
-      "Run the contract through Brakebit first. Read the findings, then decide with your own diligence.",
+    title: "Supply control",
+    detail: "Mint powers that can still change supply.",
   },
   {
-    title: "When someone sends an address",
-    detail:
-      "Pick the network, paste it, and check supply, restrictions, liquidity, and holders before you interact.",
+    title: "Transfer restrictions",
+    detail: "Freeze authority still active or cleared.",
   },
   {
-    title: "When liquidity looks thin",
-    detail:
-      "Use the report for lock cues and concentration signals that a price chart alone will not show.",
+    title: "Liquidity posture",
+    detail: "Not measured yet. Shows as unknown.",
   },
-] as const;
-
-export const CHECK_COVERAGE = [
-  [
-    "Supply control",
-    "Mint or ownership powers that can still change supply",
-  ],
-  [
-    "Transfer restrictions",
-    "Freeze, blacklist, or pause-style controls",
-  ],
-  ["Liquidity posture", "Lock and thin-liquidity cues"],
-  ["Holder concentration", "Share held by top wallets"],
-] as const;
-
-export const CHECK_TIPS = [
-  "Use the token contract or mint, not a personal wallet.",
-  "Match the network to where the token actually lives.",
-  "Treat the score as a starting point, then verify on-chain.",
+  {
+    title: "Holder concentration",
+    detail: "Top account share of supply when RPC can index it.",
+  },
+  {
+    title: "Before you trust the score",
+    detail:
+      "Use the mint (not a wallet), then verify findings on Solscan.",
+  },
 ] as const;

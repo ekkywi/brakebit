@@ -1,8 +1,4 @@
-import {
-  getChainMeta,
-  isSupportedChain,
-  type Chain,
-} from '@brakebit/shared';
+import { isSupportedChain, type Chain } from '@brakebit/shared';
 
 export class CreateCheckDto {
   address!: string;
@@ -24,9 +20,9 @@ export class CreateCheckDto {
     const chain: Chain =
       typeof chainRaw === 'string' && isSupportedChain(chainRaw)
         ? chainRaw
-        : 'ethereum';
+        : 'solana';
 
-    CreateCheckDto.assertAddress(address, chain);
+    CreateCheckDto.assertAddress(address);
 
     const dto = new CreateCheckDto();
     dto.address = address;
@@ -34,18 +30,7 @@ export class CreateCheckDto {
     return dto;
   }
 
-  private static assertAddress(address: string, chain: Chain): void {
-    const meta = getChainMeta(chain);
-
-    if (meta.family === 'evm') {
-      if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
-        throw new Error(
-          'address looks invalid for an EVM contract (expected 0x… 42 characters)',
-        );
-      }
-      return;
-    }
-
+  private static assertAddress(address: string): void {
     if (address.length < 32 || address.length > 64) {
       throw new Error('address looks invalid for a Solana mint');
     }
