@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@brakebit/shared": "workspace:*",
+    "bs58": "^6.0.0",
     "geist": "^1.9.2",
     "next": "^15.5.7",
     "react": "^19.0.0",

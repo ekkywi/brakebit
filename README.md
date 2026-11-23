@@ -15,7 +15,7 @@ packages/db   Prisma schema + client (Neon/Postgres)
 packages/shared  Shared types (RiskReport, etc.)
 ```
 
-Full folder map: [`STRUCTURE.md`](./STRUCTURE.md). Design: [`DESIGN.md`](./DESIGN.md). Product scope and build order: [`ROADMAP.md`](./ROADMAP.md).
+Docs live under [`docs/`](./docs/): [`STRUCTURE`](./docs/STRUCTURE.md), [`DESIGN`](./docs/DESIGN.md), [`ROADMAP`](./docs/ROADMAP.md), [`AUTH`](./docs/AUTH.md). Index: [`docs/README.md`](./docs/README.md).
 
 ## Prerequisites
 

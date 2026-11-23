@@ -5,6 +5,7 @@ import { ChecksThrottlerGuard } from './common/guards/checks-throttler.guard';
 import { HealthModule } from './modules/health/health.module';
 import { ChecksModule } from './modules/checks/checks.module';
 import { TokensModule } from './modules/tokens/tokens.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
 
 function checksRateLimit(): number {
@@ -23,6 +24,7 @@ function checksRateTtlMs(): number {
     HealthModule,
     ChecksModule,
     TokensModule,
+    AuthModule,
     // Unnamed throttler = "default" so @Throttle/@SkipThrottle({ default }) match.
     ThrottlerModule.forRoot([
       {

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-import { ThemeToggle } from "@/shared/ui/ThemeToggle";
+import { SiteHeader } from "@/shared/ui/SiteHeader";
 import { themeInitScript } from "@/shared/theme/theme-script";
 import "./globals.css";
 
@@ -27,28 +26,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="antialiased">
-        <header className="site-header">
-          <div className="wrap flex h-16 items-center justify-between">
-            <Link
-              href="/"
-              className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--fg)]"
-            >
-              Brakebit
-            </Link>
-            <nav className="flex items-center gap-3 sm:gap-5">
-              <Link href="/#features" className="nav-link hidden sm:inline">
-                Product
-              </Link>
-              <Link href="/#how" className="nav-link hidden sm:inline">
-                How it works
-              </Link>
-              <ThemeToggle />
-              <Link href="/check" className="btn btn-primary btn-sm">
-                Start a review
-              </Link>
-            </nav>
-          </div>
-        </header>
+        <SiteHeader />
         <main>{children}</main>
         <footer className="border-t border-[var(--border)]">
           <div className="wrap flex flex-col gap-3 py-10 text-sm text-[var(--muted)] sm:flex-row sm:items-start sm:justify-between">

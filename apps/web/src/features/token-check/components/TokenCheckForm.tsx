@@ -41,7 +41,7 @@ export function TokenCheckForm() {
   const [recentRefresh, setRecentRefresh] = useState(0);
 
   const searchSeq = useRef(0);
-  const panelRef = useRef<HTMLAsideElement | null>(null);
+  const panelRef = useRef<HTMLElement | null>(null);
 
   const fieldCopy = addressFieldCopy();
   const canSubmit = isAddressReady(address);

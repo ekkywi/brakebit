@@ -1,10 +1,10 @@
 ## Project map for agents
 
-Before changing architecture or inventing folders, read [`STRUCTURE.md`](./STRUCTURE.md). What to build next: [`ROADMAP.md`](./ROADMAP.md). UI direction: [`DESIGN.md`](./DESIGN.md). Setup: [`README.md`](./README.md).
+Before changing architecture or inventing folders, read [`docs/STRUCTURE.md`](./docs/STRUCTURE.md). What to build next: [`docs/ROADMAP.md`](./docs/ROADMAP.md). Auth / credits / payments plan: [`docs/AUTH.md`](./docs/AUTH.md). UI direction: [`docs/DESIGN.md`](./docs/DESIGN.md). Setup: [`README.md`](./README.md). Docs index: [`docs/README.md`](./docs/README.md).
 
 <!-- antislop:start -->
 ## antislop
-For UI work, read `DESIGN.md` for brand direction first, then apply antislop as the filter.
+For UI work, read `docs/DESIGN.md` for brand direction first, then apply antislop as the filter.
 For UI, copy, people, mobile layout, or code comments work, read these installed skill files directly (use these paths even if a same-named global skill exists):
 - Core filter, always on: `antislop`: `.cursor/skills/antislop/SKILL.md`
 - UI / visual: `antislop-ui`: `.cursor/skills/antislop-ui/SKILL.md`

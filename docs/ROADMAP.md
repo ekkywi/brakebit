@@ -46,7 +46,7 @@ Solana only in shared types and UI. Other chains stay off the product surface un
 | Scoring domain | Pure score/reason builders under `apps/api/.../checks/domain` |
 | Persistence | Live successful checks append to `CheckHistory` (soft-fail); `GET /checks/recent` = unique mints (latest per address) |
 | Check cache | Same mint within `CHECK_CACHE_TTL_MS` (default 5m) reuses latest history row: skip RPC + skip insert; UI shows `cached` vs `live` |
-| Docs | `README`, `STRUCTURE`, `DESIGN`, this roadmap |
+| Docs | Root `README`; `docs/` (`STRUCTURE`, `DESIGN`, `AUTH`, this roadmap) |
 
 ### Partial / next gaps
 
@@ -55,7 +55,7 @@ Solana only in shared types and UI. Other chains stay off the product surface un
 | Mint age | Phase 1 only: full 1000-signature page → age stays unknown (no deep pagination yet) |
 | LP / liquidity | Still `unknown` until a trustworthy source exists |
 | Auth / per-user history | Recently reviewed is global (anon); per signed-in user history not built |
-| Auth / credits | No login; pay-per-check / free trial not built yet |
+| Auth / credits | Phase A wallet login **done**; credits + USDC top-up still open — [`AUTH.md`](./AUTH.md) |
 | Observability | No request id / provider latency metrics yet |
 
 ---
@@ -78,7 +78,7 @@ Priorities are intentional. Finish each band before inventing adjacent product s
 1. Rate limiting on `POST /checks` — **done**
 2. Token name/symbol search — **done**
 3. Global recently-reviewed mints UI (unique by address from Neon) — **done**; optional auth for per-user history still open
-4. Pay-as-you-go credits (e.g. 1 free check, then pay per scan) — preferred over subscription for now
+4. Pay-as-you-go credits (crypto top-up preferred) — see [`AUTH.md`](./AUTH.md); **Phase A done**; Phase B ledger next
 5. Stronger address validation / dead-mint messaging
 6. Basic observability (request id, provider latency, failure reasons)
 7. Optional force-refresh to bypass check cache (e.g. `?fresh=1` / UI control)
@@ -108,9 +108,9 @@ Priorities are intentional. Finish each band before inventing adjacent product s
 
 - Risk copy stays factual; never invent partners, audits, or TVL.
 - Unknown stays unknown — do not fill LP/liquidity/age with guesses.
-- UI direction: [`DESIGN.md`](./DESIGN.md). Folder intent: [`STRUCTURE.md`](./STRUCTURE.md).
+- UI direction: [`DESIGN.md`](./DESIGN.md). Folder intent: [`STRUCTURE.md`](./STRUCTURE.md). Auth/credits plan: [`AUTH.md`](./AUTH.md).
 - New empty folders that must survive clone get a `.gitkeep` and a row in `STRUCTURE.md`.
-- Update this file when a P0/P1 item ships or scope changes.
+- Update this file (and `AUTH.md` status) when a P0/P1 or auth phase ships or scope changes.
 
 ---
 
@@ -118,7 +118,9 @@ Priorities are intentional. Finish each band before inventing adjacent product s
 
 | Doc | Role |
 |---|---|
-| [`README.md`](./README.md) | Setup and run |
+| [`../README.md`](../README.md) | Setup and run |
+| [`README.md`](./README.md) | Docs index |
 | [`STRUCTURE.md`](./STRUCTURE.md) | Folder map |
 | [`DESIGN.md`](./DESIGN.md) | Visual direction |
 | [`ROADMAP.md`](./ROADMAP.md) | Product scope + build order |
+| [`AUTH.md`](./AUTH.md) | Wallet login, credits, crypto top-up plan + status |
