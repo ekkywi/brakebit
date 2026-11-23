@@ -16,7 +16,6 @@ export interface RiskSignal {
   status: "ok" | "warn" | "bad" | "unknown";
 }
 
-/** On-chain / indexer display fields so the user can confirm the mint. */
 export interface TokenIdentity {
   name: string | null;
   symbol: string | null;
@@ -35,6 +34,6 @@ export interface RiskReport {
   checkedAt: string;
   freshnessNote: string;
   disclaimer: string;
-  /** Present when metadata was found; null fields mean unknown, not invented. */
   token?: TokenIdentity;
+  cached?: boolean;
 }

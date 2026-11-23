@@ -11,17 +11,17 @@ function CheckFormFallback() {
 
 export default function CheckPage() {
   return (
-    <section className="check-stage wrap pb-24 pt-14 md:pt-20">
-      <div className="anim-rise mb-10">
+    <section className="check-stage wrap pb-24 pt-10 md:pt-14">
+      <div className="anim-rise mb-6">
         <p className="font-mono-ui text-xs uppercase tracking-[0.14em] text-[var(--accent)]">
           Assessment workspace
         </p>
-        <h1 className="mt-2 text-[clamp(2rem,4vw,2.75rem)] font-semibold tracking-[-0.04em] text-[var(--fg)]">
+        <h1 className="mt-2 text-[clamp(1.75rem,3.5vw,2.35rem)] font-semibold tracking-[-0.04em] text-[var(--fg)]">
           Token risk review
         </h1>
-        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-[var(--muted)]">
-          Paste a Solana mint for a risk report: score, findings, and signal
-          details. Indicators for your own diligence, not investment advice.
+        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)]">
+          Search or paste a Solana mint. Reviewed tokens appear in the table;
+          the report opens beside it on desktop.
         </p>
       </div>
 

@@ -36,15 +36,16 @@ Solana only in shared types and UI. Other chains stay off the product surface un
 | Area | State |
 |---|---|
 | Monorepo | `apps/web` (Next.js), `apps/api` (NestJS), `packages/shared`, `packages/db` (Prisma/Neon) |
-| Landing + check UI | Solana-only copy, report preview, example deep link, URL state (`address`), light/dark, solid header |
+| Landing + check UI | Solana-only copy, report preview, example deep link, URL state (`address`), light/dark, solid header; check page screener-lite (toolbar + table + report panel) |
 | Token search | Name/symbol search via Jupiter proxy (`GET /tokens/search`); pick result → mint fills |
 | Report identity | Name, symbol, logo from Helius DAS `getAsset` when available |
-| Shared types | `RiskReport` (+ optional `token`), check request, Solana-only `CHAIN_META` |
-| API | `GET /health`, `POST /checks`, `GET /tokens/search` |
+| Shared types | `RiskReport` (+ optional `token`, `cached`), check request, Solana-only `CHAIN_META` |
+| API | `GET /health`, `POST /checks`, `GET /checks/recent`, `GET /tokens/search` |
 | Solana provider | SPL Token + Token-2022; mint/freeze authority; top holder (RPC → Rugcheck → optional Solscan/Birdeye); mint age phase 1 (single RPC page) |
 | Rate limiting | In-memory Throttler on `POST /checks` (env `CHECKS_RATE_*`); friendly 429 copy; health + search skipped |
 | Scoring domain | Pure score/reason builders under `apps/api/.../checks/domain` |
-| Persistence schema | `User`, `CheckHistory` in Prisma (soft-fail without `DATABASE_URL`) |
+| Persistence | Live successful checks append to `CheckHistory` (soft-fail); `GET /checks/recent` = unique mints (latest per address) |
+| Check cache | Same mint within `CHECK_CACHE_TTL_MS` (default 5m) reuses latest history row: skip RPC + skip insert; UI shows `cached` vs `live` |
 | Docs | `README`, `STRUCTURE`, `DESIGN`, this roadmap |
 
 ### Partial / next gaps
@@ -53,7 +54,7 @@ Solana only in shared types and UI. Other chains stay off the product surface un
 |---|---|
 | Mint age | Phase 1 only: full 1000-signature page → age stays unknown (no deep pagination yet) |
 | LP / liquidity | Still `unknown` until a trustworthy source exists |
-| Neon usage | Schema ready; history not wired in API/UI |
+| Auth / per-user history | Recently reviewed is global (anon); per signed-in user history not built |
 | Auth / credits | No login; pay-per-check / free trial not built yet |
 | Observability | No request id / provider latency metrics yet |
 
@@ -67,18 +68,20 @@ Priorities are intentional. Finish each band before inventing adjacent product s
 
 1. Live Solana provider (mint / freeze / top holder / age phase 1 / Token-2022 / metadata) — **done**
 2. Deeper mint-age pagination only if needed; keep LP/liquidity unknown until proven
-3. Persist successful checks when `DATABASE_URL` is set; keep soft-fail when it is not
-4. Honest empty/error states when a signal source is unavailable — **mostly in place**
-5. Additional chains — only after Solana depth stays credible; do not re-add stub chips
+3. Persist successful checks when `DATABASE_URL` is set; keep soft-fail when it is not — **done**
+4. Short TTL check cache (reuse history, skip RPC/insert) — **done** (default 5m; `CHECK_CACHE_TTL_MS`)
+5. Honest empty/error states when a signal source is unavailable — **mostly in place**
+6. Additional chains — only after Solana depth stays credible; do not re-add stub chips
 
 ### P1 — Product hardening
 
 1. Rate limiting on `POST /checks` — **done**
 2. Token name/symbol search — **done**
-3. Optional auth + check history UI (read past reports)
+3. Global recently-reviewed mints UI (unique by address from Neon) — **done**; optional auth for per-user history still open
 4. Pay-as-you-go credits (e.g. 1 free check, then pay per scan) — preferred over subscription for now
 5. Stronger address validation / dead-mint messaging
 6. Basic observability (request id, provider latency, failure reasons)
+7. Optional force-refresh to bypass check cache (e.g. `?fresh=1` / UI control)
 
 ### P2 — Later
 

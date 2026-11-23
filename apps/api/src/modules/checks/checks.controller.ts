@@ -4,6 +4,8 @@ import {
   Controller,
   HttpCode,
   Post,
+  Get,
+  Query,
 } from '@nestjs/common';
 import { ChecksService } from './checks.service';
 import { CreateCheckDto } from './dto/create-check.dto';
@@ -25,4 +27,15 @@ export class ChecksController {
       });
     }
   }
+
+  @Get('recent')
+  async recent(@Query('limit') limitRaw?: string) {
+    const parsed = Number(limitRaw ?? 20);
+    const limit = Number.isFinite(parsed) ? parsed : 20;
+    return {
+      results: await this.checksService.listRecent(limit),
+    };
+  }
 }
+
+

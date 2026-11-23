@@ -44,7 +44,7 @@ Display: tight tracking (`-0.04em`), weight 600. Body: 15–16px, muted gray.
 ## Layout
 
 1. Landing: atmosphere hero (headline + CTAs), elevated report preview, features, how+signals, CTA band
-2. Check: quiet top wash, search + mint form, guidance / skeleton / report (identity row on live reports)
+2. Check (screener-lite): quiet top wash; compact toolbar (search + mint + generate); recently-reviewed table (unique mint, latest score); report as sticky side panel on desktop / stacked on mobile. No price/volume columns.
 3. Radius `12px` cards, `999px` buttons. Content max width `80rem`
 4. Sticky header solid `var(--bg)` + bottom border (no glass)
 

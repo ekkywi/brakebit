@@ -10,7 +10,7 @@ Agents continuing this repo on another machine: read this file first for folder 
 brakebit/
 ├── apps/
 │   ├── web/                 Next.js 15 App Router UI (Geist)
-│   └── api/                 NestJS API (checks, tokens search, health)
+│   └── api/                 NestJS API (checks + recent, tokens search, health)
 ├── packages/
 │   ├── shared/              Shared types + chain metadata
 │   └── db/                  Prisma schema + client (Neon/Postgres)
@@ -39,10 +39,10 @@ apps/web/
     │   └── globals.css      Tokens, light/dark, components
     ├── features/
     │   └── token-check/     Token review feature slice
-    │       ├── components/  TokenCheckForm, RiskReportView, ReportSkeleton
-    │       ├── hooks/       Reserved for feature hooks (.gitkeep)
-    │       ├── lib/         Address helpers, explorers, formatters
-    │       └── api.ts       Client → Nest `/checks` + `/tokens/search`
+│       ├── components/  TokenCheckForm (screener shell), RiskReportView, ReportSkeleton, RecentChecks (table)
+│       ├── hooks/       Reserved for feature hooks (.gitkeep)
+│       ├── lib/         Address helpers, explorers, formatters
+│       └── api.ts       Client → Nest `/checks`, `/checks/recent` (distinct), `/tokens/search`
     └── shared/
         ├── config/          Public env (API base URL)
         ├── content/         Product copy (landing + check)
@@ -94,7 +94,8 @@ When you add a new intentional empty folder, put a `.gitkeep` in it and add a ro
 
 - No trading, signals, or custody modules.
 - Chain data comes from RPC/indexers via API providers — do not mirror wholesale into Postgres.
-- Neon/Prisma holds product data (users/history later), not full chain state.
+- Neon/Prisma holds product data (`CheckHistory` today; users later), not full chain state.
+- `CheckHistory` is also the short-TTL check cache source: same mint within `CHECK_CACHE_TTL_MS` skips RPC and does not insert again.
 
 ## After clone checklist
 

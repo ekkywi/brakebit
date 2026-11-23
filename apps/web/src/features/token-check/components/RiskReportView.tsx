@@ -8,6 +8,7 @@ import { chainLabel, levelLabel } from "../lib/format";
 type Props = {
   report: RiskReport;
   onCheckAnother?: () => void;
+  compact?: boolean;
 };
 
 function levelColor(level: RiskLevel): string {
@@ -52,7 +53,11 @@ function statusLabel(status: string): string {
   return "Unknown";
 }
 
-export function RiskReportView({ report, onCheckAnother }: Props) {
+export function RiskReportView({
+  report,
+  onCheckAnother,
+  compact = false,
+}: Props) {
   const tone = scoreTone(report.level);
   const checkedLocal = new Date(report.checkedAt).toLocaleString();
   const explorerUrl = explorerTokenUrl(report.chain, report.address);
@@ -69,13 +74,23 @@ export function RiskReportView({ report, onCheckAnother }: Props) {
   }
 
   return (
-    <section className="report-in card overflow-hidden">
-      <div className="instrument-face p-6">
+    <section
+      className={
+        compact
+          ? "report-in report-in--compact card overflow-hidden"
+          : "report-in card overflow-hidden"
+      }
+    >
+      <div className={compact ? "instrument-face p-5" : "instrument-face p-6"}>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs text-white/55">Risk score</p>
             <p
-              className="mt-2 text-6xl font-semibold leading-none tracking-[-0.04em]"
+              className={
+                compact
+                  ? "mt-2 text-4xl font-semibold leading-none tracking-[-0.04em]"
+                  : "mt-2 text-6xl font-semibold leading-none tracking-[-0.04em]"
+              }
               style={{ color: tone }}
             >
               {report.score}
@@ -84,7 +99,7 @@ export function RiskReportView({ report, onCheckAnother }: Props) {
           <div className="text-right">
             <p className="text-xs text-white/50">{checkedLocal}</p>
             <p className="font-mono-ui mt-2 text-[10px] uppercase tracking-wide text-white/45">
-              Solana · live
+              Solana · {report.cached ? 'cached' : 'live'}
             </p>
           </div>
         </div>
@@ -100,7 +115,6 @@ export function RiskReportView({ report, onCheckAnother }: Props) {
 
         <div className="mt-5 flex items-start gap-3">
           {report.token?.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={report.token.imageUrl}
               alt=""

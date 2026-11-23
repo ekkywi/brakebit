@@ -61,3 +61,40 @@ export async function searchTokens(query: string): Promise<TokenSearchHit[]> {
   const body = (await response.json()) as { results?: TokenSearchHit[] };
   return Array.isArray(body.results) ? body.results : [];
 }
+
+export type RecentCheckItem = {
+  id: string;
+  address: string;
+  chain: string;
+  score: number;
+  level: string;
+  summary: string;
+  createdAt: string;
+  token: {
+    name: string | null;
+    symbol: string | null;
+    imageUrl: string | null;
+  } | null;
+};
+
+export async function fetchRecentChecks(
+  limit = 5,
+): Promise<RecentCheckItem[]> {
+  const url = new URL(`${getApiBaseUrl()}/checks/recent`);
+  url.searchParams.set("limit", String(limit));
+
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: { Accept: "application/json" },
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      readErrorMessage(errorBody) ?? "Failed to load recent checks",
+    );
+  }
+
+  const body = (await response.json()) as { results?: RecentCheckItem[] };
+  return Array.isArray(body.results) ? body.results : [];
+}
