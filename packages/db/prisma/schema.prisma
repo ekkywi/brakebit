@@ -21,6 +21,8 @@ model User {
   updatedAt     DateTime       @updatedAt
   checks        CheckHistory[]
   sessions      Session[]
+  creditLots    CreditLot[]
+  creditLedger  CreditLedger[]
 }
 
 model AuthNonce {
@@ -64,4 +66,83 @@ model CheckHistory {
 
   @@index([address, chain])
   @@index([userId, createdAt])
+}
+
+enum CampaignTrigger {
+  first_login
+  code
+  manual
+}
+
+enum LotSource {
+  promo
+  purchase
+}
+
+enum LedgerType {
+  promo_grant
+  purchase
+  spend
+  refund
+  admin_adjust
+  expire
+}
+
+model Campaign {
+  id              String          @id @default(cuid())
+  key             String          @unique
+  name            String
+  credits         Int
+  trigger         CampaignTrigger
+  isActive        Boolean         @default(true)
+  startsAt        DateTime?
+  endsAt          DateTime?
+  expiresInDays   Int?
+  fixedExpiresAt  DateTime?
+  maxClaims       Int?
+  claimCount      Int             @default(0)
+  code            String?         @unique
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  lots            CreditLot[]
+}
+
+model CreditLot {
+  id         String       @id @default(cuid())
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source     LotSource
+  campaignId String?
+  campaign   Campaign?    @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  amount     Int
+  remaining  Int
+  expiresAt  DateTime?
+  createdAt  DateTime     @default(now())
+
+  @@unique([userId, campaignId])
+  @@index([userId, expiresAt])
+}
+
+model CreditLedger {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      LedgerType
+  delta     Int
+  lotId     String?
+  refId     String?
+  reason    String?
+  createdAt DateTime   @default(now())
+
+  @@index([userId, createdAt])
+  @@index([refId])
+}
+
+model GuestUsage {
+  id     String @id @default(cuid())
+  ipHash String
+  day    String
+  count  Int    @default(0)
+
+  @@unique([ipHash, day])
 }

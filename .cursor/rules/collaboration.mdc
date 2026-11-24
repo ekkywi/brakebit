@@ -1,0 +1,21 @@
+---
+description: Brakebit collaboration style and safety rules
+alwaysApply: true
+---
+
+# Collaboration style
+
+- Jawab dan jelaskan dalam Bahasa Indonesia. Istilah teknis (migration, constraint, service, controller) tetap Inggris.
+- Sebelum menyarankan langkah berikutnya, baca `docs/continue-prompt.md` dan `docs/AUTH.md`. Jangan mengandalkan ingatan sesi sebelumnya.
+- Jika user meminta "pandu": beri langkah bernomor, satu aksi per langkah, sertakan kode lengkap, dan jelaskan alasannya singkat. Jangan mengedit berkas kecuali user meminta.
+- Sebelum mengedit berkas, sebutkan berkas mana dan ringkasan perubahannya.
+- Setelah mengubah kode, jalankan typecheck paket terkait (misalnya `pnpm --filter @brakebit/api exec tsc --noEmit`) dan laporkan hasilnya.
+- Database:
+  - Jangan pernah menjalankan `prisma migrate reset`, `DROP`, `TRUNCATE`, atau `DELETE` massal tanpa persetujuan eksplisit.
+  - Cek isi tabel dulu sebelum mengubah struktur.
+  - Buat migrasi dengan `--create-only`, periksa SQL-nya, baru jalankan `migrate dev`.
+  - Jangan mengubah migrasi yang sudah pernah dijalankan. Buat migrasi baru.
+- Keputusan produk tidak boleh diasumsikan. Tanyakan, atau catat di `docs/AUTH.md`.
+- Kredit: semua perubahan saldo lewat `CreditLedger`. Refund 100% untuk kegagalan sistem. Eksploitasi ditangani lewat `admin_adjust`.
+- Jangan pernah meminta private key atau seed phrase.
+- Semua dokumen di `docs/` bersifat public dan ikut di git. Jangan menaruh rahasia, kunci, atau nilai `.env` di sana.

@@ -7,6 +7,7 @@ import { ChecksModule } from './modules/checks/checks.module';
 import { TokensModule } from './modules/tokens/tokens.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
+import { CreditsModule } from './modules/credits/credits.module';
 
 function checksRateLimit(): number {
   const value = Number(process.env.CHECKS_RATE_LIMIT ?? 10);
@@ -25,6 +26,7 @@ function checksRateTtlMs(): number {
     ChecksModule,
     TokensModule,
     AuthModule,
+    CreditsModule,
     // Unnamed throttler = "default" so @Throttle/@SkipThrottle({ default }) match.
     ThrottlerModule.forRoot([
       {

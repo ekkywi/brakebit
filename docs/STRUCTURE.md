@@ -2,7 +2,7 @@
 
 Source of truth for layout after clone. Git does not track empty directories — reserved folders below keep a `.gitkeep` so the path survives on every machine.
 
-Agents continuing this repo on another machine: read this file first for folder intent, then [`ROADMAP.md`](./ROADMAP.md) for what to build next, [`AUTH.md`](./AUTH.md) for wallet/credits/payments plan, then `DESIGN.md` for UI direction.
+Agents continuing this repo on another machine: start with [`continue-prompt.md`](./continue-prompt.md) for current status, then read this file for folder intent, then [`ROADMAP.md`](./ROADMAP.md) for what to build next, [`AUTH.md`](./AUTH.md) for wallet/credits/payments plan, then `DESIGN.md` for UI direction.
 
 ## Top level
 
@@ -10,7 +10,7 @@ Agents continuing this repo on another machine: read this file first for folder 
 brakebit/
 ├── apps/
 │   ├── web/                 Next.js 15 App Router UI (Geist)
-│   └── api/                 NestJS API (checks + recent, tokens search, health)
+│   └── api/                 NestJS API (auth, checks + recent, tokens search, credits, health)
 ├── packages/
 │   ├── shared/              Shared types + chain metadata
 │   └── db/                  Prisma schema + client (Neon/Postgres)
@@ -19,7 +19,9 @@ brakebit/
 │   ├── STRUCTURE.md         This file
 │   ├── ROADMAP.md           Product scope + build priorities
 │   ├── DESIGN.md            Visual / product design direction
+│   ├── continue-prompt.md   Copy-paste prompt + current status for a new chat / machine
 │   └── AUTH.md              Wallet login / credits / crypto top-up plan
+├── .cursor/rules/           Cursor project rules (collaboration.mdc)
 ├── AGENTS.md / CLAUDE.md    Agent skill pointers (antislop)
 ├── README.md                Setup and run
 ├── .env.example             Env template (copy to .env locally)
@@ -70,6 +72,7 @@ apps/api/src/
 ├── infrastructure/prisma/   Prisma wiring
 └── modules/
     ├── auth/                Wallet SIWS login, sessions, SessionAuthGuard
+    ├── credits/             Campaign claims, credit lots, atomic spend/refund, balance
     ├── checks/              Token check module
     │   ├── domain/          Pure scoring / report builders
     │   ├── dto/             CreateCheckDto, etc.
@@ -103,7 +106,7 @@ When you add a new intentional empty folder, put a `.gitkeep` in it and add a ro
 
 - No trading, signals, or custody modules.
 - Chain data comes from RPC/indexers via API providers — do not mirror wholesale into Postgres.
-- Neon/Prisma holds product data (`CheckHistory` today; users later), not full chain state.
+- Neon/Prisma holds product data (`CheckHistory`, users, sessions, credit tables), not full chain state.
 - `CheckHistory` is also the short-TTL check cache source: same mint within `CHECK_CACHE_TTL_MS` skips RPC and does not insert again.
 
 ## After clone checklist

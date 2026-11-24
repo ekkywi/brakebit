@@ -15,11 +15,26 @@ import { SESSION_COOKIE } from './auth.constants';
 import { AuthService } from './auth.service';
 import { NonceDto } from './dto/nonce.dto';
 import { VerifyDto } from './dto/verify.dto';
+import { CreditsService } from '../credits/credits.service';
 
 @Controller('auth')
 @Throttle({ default: { limit: 20, ttl: 60_000 } })
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly credits: CreditsService,
+  ) {}
+
+  private async claimWelcome(userId: string): Promise<void> {
+    try {
+      await this.credits.claimCampaign(userId, 'welcome');
+    } catch (error) {
+      console.warn(
+        '[auth] welcome claim failed',
+        error instanceof Error ? error.message : error,
+      )
+    }
+  }
 
   @Post('solana/nonce')
   async nonce(@Req() req: Request, @Body() body: unknown) {
@@ -46,6 +61,7 @@ export class AuthController {
     try {
       const dto = VerifyDto.parse(body);
       const result = await this.authService.verifySignIn(dto);
+      await this.claimWelcome(result.user.id);
 
       res.cookie(SESSION_COOKIE, result.sessionToken, {
         httpOnly: true,

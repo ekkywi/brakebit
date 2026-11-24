@@ -1,0 +1,1 @@
+ALTER TYPE "LedgerType" RENAME VALUE 'check_spend' TO 'spend';
