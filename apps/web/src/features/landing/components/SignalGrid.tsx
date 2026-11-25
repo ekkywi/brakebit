@@ -119,7 +119,7 @@ export function SignalGrid() {
         <div
           ref={gridRef}
           role="group"
-          aria-label="The six signals every check reads"
+          aria-label="The six signals a report covers"
           className="sg-grid"
           onPointerMove={handleMove}
           onPointerLeave={handleLeave}

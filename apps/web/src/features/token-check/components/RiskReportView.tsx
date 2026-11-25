@@ -10,6 +10,7 @@ import {
   type SignalStripItem,
 } from "@/shared/ui/SignalStrip";
 import { explorerName, explorerTokenUrl } from "../lib/explorer";
+import { reportCoverage } from "../lib/coverage";
 import { chainLabel, levelLabel } from "../lib/format";
 
 type Props = {
@@ -63,7 +64,9 @@ export function RiskReportView({
   onCheckAnother,
   compact = false,
 }: Props) {
-  const tone = scoreTone(report.level);
+  const coverage = reportCoverage(report.signals);
+  // Limited data: the score stays, but it is not colored as safe or risky.
+  const tone = coverage.limited ? "#EDEDED" : scoreTone(report.level);
   const summaryItems = stripItems(report.signals);
   const checkedLocal = new Date(report.checkedAt).toLocaleString();
   const explorerUrl = explorerTokenUrl(report.chain, report.address);
@@ -109,12 +112,24 @@ export function RiskReportView({
             </p>
           </div>
         </div>
-        <p className="mt-4 text-sm font-medium" style={{ color: tone }}>
-          {levelLabel(report.level)}
+        <p
+          className="mt-4 text-sm font-medium"
+          style={coverage.limited ? undefined : { color: tone }}
+        >
+          {coverage.limited ? "Limited data" : levelLabel(report.level)}
+        </p>
+        <p className="mt-1 text-xs text-white/60">
+          {coverage.read} of {coverage.total} signals read
         </p>
         <div className="score-bar mt-3 max-w-md">
           <span style={{ width: `${report.score}%`, background: tone }} />
         </div>
+        {coverage.limited ? (
+          <p className="mt-3 max-w-2xl text-xs leading-relaxed text-white/65">
+            The score uses only the signals that were read. Unknown is not
+            counted as safe.
+          </p>
+        ) : null}
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65">
           {report.summary}
         </p>

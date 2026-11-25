@@ -16,7 +16,7 @@ Developer-grade product site, in the spirit of Vercel and Render. Quiet and prec
 
 ## Visual language
 
-Light (or dark) page, near-black/near-white type, thin borders. The hero sits on a sparse square grid. A smaller grid on the right holds six numbered cells, one per signal Brakebit reads (the six rows every report carries, in API order). The risk report preview moves to its own section below the hero and stays the proof of the product. One cyan accent for marks, section labels, and lit squares. Risk colors stay reserved for report severity.
+Light (or dark) page, near-black/near-white type, thin borders. The hero sits on a sparse square grid. A smaller grid on the right holds six numbered cells, one per signal a report covers (the six rows every report carries, in API order). The risk report preview moves to its own section below the hero and stays the proof of the product. One cyan accent for marks, section labels, and lit squares. Risk colors stay reserved for report severity.
 
 Light/dark is user-controlled via a sun/moon switcher. Preference persists in `localStorage` and respects system preference on first visit.
 
@@ -72,6 +72,16 @@ Check workspace (`/check`, `/dashboard/check`), one exception, purpose written d
 - Loading: the six numbered squares in the report skeleton light in order while a check runs (`sq-scan`). It marks a real wait and ends when the report arrives. Static under `prefers-reduced-motion`.
 - Report: a strip of six squares ("Signals at a glance") under the score face. Each square is filled by the real signal status. Color is never the only cue: outlined = clear, thick border = watch, solid = elevated, dashed = unknown. Rows below carry the same numbers and the status text. Static, no motion.
 - No blinking grid, no canvas on the check pages. People read data there.
+
+## Credibility rules (report)
+
+Decided with the owner on 25 Nov 2026. These override any copy that says otherwise.
+
+- Six rows are always shown. A signal with no value is **Unknown**, never clear and never counted as safe.
+- Today only four signals can ever be read: mint authority, freeze authority, top holder %, and token age. LP lock/burn and liquidity (USD) have no data source yet, so they always show Unknown. Copy must not say "six live signals".
+- Report header shows "N of 6 signals read" next to the score.
+- If fewer than `MIN_READ_SIGNALS` (4) signals are read, the level label becomes "Limited data", the score is shown in neutral text (not green, amber, or red), and the report says that Unknown is not counted as safe. The API summary for a low score stays as it is.
+- Landing and preview copy describe what a report does, not what a finished score means. Sample figures in the preview must be values the product can produce.
 
 ## App shell (`/dashboard` and children)
 

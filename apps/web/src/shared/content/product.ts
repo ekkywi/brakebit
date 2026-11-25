@@ -89,17 +89,17 @@ export const SIGNALS = [
     key: "liquidity_usd",
     title: "Market liquidity",
     field: "Liquidity (USD)",
-    brief: "Reported pool liquidity when a market source has it.",
+    brief: "Not read yet. No market data source is connected.",
     detail:
-      "Reported pool liquidity in USD when a market source has it. Thin books amplify slippage and manipulation risk.",
+      "Pool liquidity in USD. Brakebit does not connect a market data source yet, so this shows Unknown. Thin books amplify slippage and manipulation risk.",
   },
   {
     key: "age_hours",
     title: "Token age",
     field: "Age (hours)",
-    brief: "Estimated age when it can be read.",
+    brief: "Shown when the mint's history fits in one RPC page.",
     detail:
-      "Estimated token age when it can be read. Newer tokens have less observable history.",
+      "Estimated from the oldest signature in one RPC page. Mints with a long history show Unknown. Newer tokens have less observable history.",
   },
 ] as const;
 

@@ -35,7 +35,7 @@ export function FieldReportPreview() {
     { label: "Freeze authority", value: "Clear", status: "ok" },
     { label: "LP lock/burn", value: "Unknown", status: "unknown" },
     { label: "Top holder %", value: "24%", status: "warn" },
-    { label: "Liquidity (USD)", value: "48000", status: "ok" },
+    { label: "Liquidity (USD)", value: "Unknown", status: "unknown" },
     { label: "Age (hours)", value: "5400", status: "ok" },
   ];
 

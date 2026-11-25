@@ -408,7 +408,7 @@ export function TokenCheckForm({ ref, notice, onApiError, errorAction }: Props) 
           {!showPanel ? (
             <div className="card p-5">
               <p className="text-sm font-medium text-[var(--fg)]">
-                The six signals a report reads
+                What a report covers
               </p>
               <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {SIGNALS.map((signal, index) => (

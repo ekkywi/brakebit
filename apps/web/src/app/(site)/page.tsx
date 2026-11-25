@@ -164,10 +164,11 @@ export default function HomePage() {
             <div id="signals" className="scroll-mt-16">
               <p className="section-label">Signals</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] md:text-4xl">
-                Six signals every time.
+                Six signals. Unknown stays visible.
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed text-[var(--muted)]">
-                One readout shape so each Solana check is easy to scan.
+                Every report lists all six. A signal Brakebit cannot read shows
+                as Unknown, never as clear.
               </p>
               <ul className="mt-10 divide-y divide-[var(--border)] border-y border-[var(--border)]">
                 {SIGNALS.map((signal, index) => (

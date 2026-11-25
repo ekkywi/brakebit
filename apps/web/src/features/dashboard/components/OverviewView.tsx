@@ -59,8 +59,8 @@ export function OverviewView() {
           What one credit buys
         </h2>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--muted)]">
-          A live check reads these six signals and returns one report. Cached
-          results cost nothing.
+          A live check covers these six signals. A signal the chain does not
+          give enough data for shows as Unknown. Cached results cost nothing.
         </p>
         <ul className="mt-6 grid gap-x-8 gap-y-5 border-t border-[var(--border)] pt-6 sm:grid-cols-2 lg:grid-cols-3">
           {SIGNALS.map((signal, index) => (
