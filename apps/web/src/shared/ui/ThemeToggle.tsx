@@ -47,7 +47,12 @@ function MoonIcon() {
   );
 }
 
-export function ThemeToggle() {
+type Props = {
+  /** `large` is the 44px touch target used in the dashboard header. */
+  size?: "default" | "large";
+};
+
+export function ThemeToggle({ size = "default" }: Props) {
   const [theme, setTheme] = useState<Theme>("light");
   const [ready, setReady] = useState(false);
 
@@ -73,7 +78,7 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="theme-toggle"
+      className={size === "large" ? "theme-toggle theme-toggle--lg" : "theme-toggle"}
       onClick={toggle}
       aria-label={label}
       title={label}

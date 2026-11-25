@@ -12,7 +12,12 @@ import {
 } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { RiskReport } from "@brakebit/shared";
-import { CHECK_GUIDANCE, SAMPLE_CHECK } from "@/shared/content/product";
+import {
+  CHECK_TIP,
+  SAMPLE_CHECK,
+  SIGNALS,
+  signalLabel,
+} from "@/shared/content/product";
 import { ApiError } from "@/shared/api/client";
 import {
   createTokenCheck,
@@ -403,18 +408,24 @@ export function TokenCheckForm({ ref, notice, onApiError, errorAction }: Props) 
           {!showPanel ? (
             <div className="card p-5">
               <p className="text-sm font-medium text-[var(--fg)]">
-                What you get in a report
+                The six signals a report reads
               </p>
-              <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {CHECK_GUIDANCE.map((item) => (
-                  <li key={item.title}>
-                    <p className="text-sm text-[var(--fg)]">{item.title}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">
-                      {item.detail}
-                    </p>
+              <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {SIGNALS.map((signal, index) => (
+                  <li key={signal.key} className="flex gap-3">
+                    <span className="sq-index">{signalLabel(index + 1)}</span>
+                    <div className="min-w-0">
+                      <p className="text-sm text-[var(--fg)]">{signal.title}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">
+                        {signal.brief}
+                      </p>
+                    </div>
                   </li>
                 ))}
               </ul>
+              <p className="mt-5 border-t border-[var(--border)] pt-4 text-xs leading-relaxed text-[var(--muted)]">
+                {CHECK_TIP}
+              </p>
             </div>
           ) : null}
         </div>

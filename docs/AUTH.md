@@ -69,7 +69,7 @@ Update the status table here whenever a phase ships.
 | Guest daily quota (1 free live check/day) | **Done** (Phase B Langkah 4; `GuestQuotaService`, atomic upsert, UTC day) |
 | Credit gate on `POST /checks` (spend, 402, refund on system failure) | **Done** (Phase B Langkah 4; live check tested with guest flow, signed-in flow pending) |
 | `GET /credits/me` (two buckets) | **Done** (Phase B Langkah 5) |
-| Web dashboard `/dashboard` (overview, balance, guest modal, insufficient-credit link) | **Built** (Phase B Langkah 6; browser test pending) |
+| Web dashboard `/dashboard` (overview, balance, guest modal, insufficient-credit link) | **Done** (Phase B Langkah 6; owner tested login redirect, logout, and guest limit to member confirm; signed-in check with credits not yet recorded; landing and check redesign not yet browser-tested) |
 | `CheckHistory` persist + recent unique mints | Done |
 | Check cache TTL (default 5m) | Done |
 | Screener check UI (toolbar + table + report panel) | Done |
@@ -144,7 +144,7 @@ Ledger `type` values (small on purpose): `promo_grant`, `purchase`, `spend`, `re
    - Guest: consume daily quota, else `401 guest_limit_reached`.
    - Signed in: spend 1 credit, else `402 insufficient_credits`.
 6. `GET /credits/me` behind `SessionAuthGuard`: `{ topup: { balance }, promo: { balance, soonestExpiresAt } }`. — **done** (Langkah 5)
-7. Web (Langkah 6) — **built, browser test pending**:
+7. Web (Langkah 6) — **done**; main flow tested manually by the owner:
    - Guests and signed-in users use **separate pages** because their access differs. Guests use `/check` (public, marketing chrome, one free live check per day). Signed-in users use `/dashboard/check` (app shell, 1 credit per live check). Both share `TokenCheckForm`; the access rules live in `GuestCheck` and `MemberCheck`.
    - The marketing header (`(site)` group) shows only a Sign in button for guests. It shows no Dashboard link, wallet, or Log out.
    - **Redirects happen on the server** (`apps/web/src/middleware.ts`), before any HTML is sent. A visitor with the session cookie who opens `/` or `/check` goes to `/dashboard` or `/dashboard/check` (query string kept). A visitor without it who opens `/dashboard` goes to `/`. The middleware checks only that the cookie exists. The API stays the authority.
@@ -218,7 +218,8 @@ Reject verify when: wrong domain in message, reused nonce, expired nonce, bad si
 ## Handoff checklist for the next agent / machine
 
 1. Read [`AUTH.md`](./AUTH.md) (this file), [`ROADMAP.md`](./ROADMAP.md), [`STRUCTURE.md`](./STRUCTURE.md), [`DESIGN.md`](./DESIGN.md) for any UI.
-2. Phase A is done. Phase B Langkah 1–6 are done in code (Langkah 6 web is built but not yet tested in the browser). Next is **Phase B2 / admin guard** or manual web tests, as the user decides. Pending manual tests: Phantom sign-in (Phase A), welcome claim (Phase B Langkah 3), signed-in check path, and the Langkah 6 browser flow. Track them in [`continue-prompt.md`](./continue-prompt.md). Product decisions (guest quota, welcome 10 credits / 7 days, two-bucket balance UI, balance lives on `/dashboard` not in the header) are agreed; see "Product decisions for Phase B".
+2. Phase A is done. Phase B Langkah 1–6 are done in code. The Langkah 6 main flow was tested manually by the owner. Next is **Phase B2 / admin guard** or manual web tests, as the user decides. Pending manual tests: Phantom sign-in (Phase A), welcome claim (Phase B Langkah 3), signed-in check that spends a credit, and the landing, check, and dashboard redesign in the browser. Track them in [`continue-prompt.md`](./continue-prompt.md). Product decisions (guest quota, welcome 10 credits / 7 days, two-bucket balance UI, balance lives on `/dashboard` not in the header) are agreed; see "Product decisions for Phase B".
 3. Do not invent trading, custody, or multi-chain payment stubs.
 4. After shipping a phase: update the status table above and the matching ROADMAP rows.
 5. Security: follow the Phase A checklist; do not weaken nonce/session rules for convenience.
+6. Moving to another machine: commit and push first (`git add -A`, then `git push`). On the new machine run `git pull`, `pnpm install`, copy `.env` files by hand (they are not in git, and their values never go in `docs/`), then `pnpm dev`. Do not copy `apps/web/.next`; delete it if a build fails with odd errors.

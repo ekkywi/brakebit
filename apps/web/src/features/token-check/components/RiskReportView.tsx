@@ -2,6 +2,13 @@
 
 import { useState } from "react";
 import type { RiskLevel, RiskReport } from "@brakebit/shared";
+import { signalLabel, signalNumber } from "@/shared/content/product";
+import {
+  SignalStrip,
+  signalStatusColor,
+  signalStatusText,
+  type SignalStripItem,
+} from "@/shared/ui/SignalStrip";
 import { explorerName, explorerTokenUrl } from "../lib/explorer";
 import { chainLabel, levelLabel } from "../lib/format";
 
@@ -39,18 +46,16 @@ function scoreTone(level: RiskLevel): string {
   }
 }
 
-function statusColor(status: string): string {
-  if (status === "ok") return "var(--ok)";
-  if (status === "warn") return "var(--warn)";
-  if (status === "bad") return "var(--bad)";
-  return "var(--unknown)";
-}
-
-function statusLabel(status: string): string {
-  if (status === "ok") return "Clear";
-  if (status === "warn") return "Watch";
-  if (status === "bad") return "Elevated";
-  return "Unknown";
+/** Numbered signals in order, for the summary strip. Keys outside the six are skipped. */
+function stripItems(signals: RiskReport["signals"]): SignalStripItem[] {
+  const items: SignalStripItem[] = [];
+  for (const signal of signals) {
+    const n = signalNumber(signal.key);
+    if (n !== null) {
+      items.push({ n, label: signal.label, status: signal.status });
+    }
+  }
+  return items.sort((a, b) => a.n - b.n);
 }
 
 export function RiskReportView({
@@ -59,6 +64,7 @@ export function RiskReportView({
   compact = false,
 }: Props) {
   const tone = scoreTone(report.level);
+  const summaryItems = stripItems(report.signals);
   const checkedLocal = new Date(report.checkedAt).toLocaleString();
   const explorerUrl = explorerTokenUrl(report.chain, report.address);
   const [copied, setCopied] = useState(false);
@@ -151,6 +157,12 @@ export function RiskReportView({
         </div>
       </div>
 
+      {summaryItems.length > 0 ? (
+        <div className="border-b border-[var(--border)] px-6 py-4">
+          <SignalStrip items={summaryItems} />
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap gap-2 border-b border-[var(--border)] px-6 py-3">
         <button type="button" className="btn btn-secondary btn-sm" onClick={copyAddress}>
           {copied ? "Copied" : "Copy address"}
@@ -206,30 +218,38 @@ export function RiskReportView({
       <div className="border-t border-[var(--border)] p-6">
         <h2 className="text-sm font-medium text-[var(--fg)]">Signals</h2>
         <ul className="mt-3 divide-y divide-[var(--border)]">
-          {report.signals.map((signal) => (
-            <li
-              key={signal.key}
-              className="flex items-center justify-between gap-4 py-3"
-            >
-              <span className="text-sm text-[var(--ink-soft)]">
-                {signal.label}
-              </span>
-              <span className="flex items-center gap-3">
-                <span
-                  className="text-xs"
-                  style={{ color: statusColor(signal.status) }}
-                >
-                  {statusLabel(signal.status)}
+          {report.signals.map((signal) => {
+            const n = signalNumber(signal.key);
+            return (
+              <li
+                key={signal.key}
+                className="flex items-center justify-between gap-4 py-3"
+              >
+                <span className="flex min-w-0 items-center gap-3 text-sm text-[var(--ink-soft)]">
+                  {n !== null ? (
+                    <span className="sq-index sq-index--sm">
+                      {signalLabel(n)}
+                    </span>
+                  ) : null}
+                  {signal.label}
                 </span>
-                <span
-                  className="font-mono-ui text-sm"
-                  style={{ color: statusColor(signal.status) }}
-                >
-                  {signal.value === null ? "Unknown" : String(signal.value)}
+                <span className="flex items-center gap-3">
+                  <span
+                    className="text-xs"
+                    style={{ color: signalStatusColor(signal.status) }}
+                  >
+                    {signalStatusText(signal.status)}
+                  </span>
+                  <span
+                    className="font-mono-ui text-sm"
+                    style={{ color: signalStatusColor(signal.status) }}
+                  >
+                    {signal.value === null ? "Unknown" : String(signal.value)}
+                  </span>
                 </span>
-              </span>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       </div>
 

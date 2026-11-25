@@ -47,50 +47,74 @@ export const STEPS = [
   },
 ] as const;
 
+/**
+ * The six signals every report carries, in the order the API returns them
+ * (`risk-score.ts`). `key` is the API signal key, `field` the row label in the
+ * report. The position in this list is the signal number (01 to 06).
+ */
 export const SIGNALS = [
   {
+    key: "mint_authority",
     title: "Supply control",
+    field: "Mint authority",
+    brief: "Mint powers that can still change supply.",
     detail:
       "Whether new tokens can still be minted or supply can be changed after launch.",
   },
   {
+    key: "freeze_authority",
     title: "Transfer restrictions",
+    field: "Freeze authority",
+    brief: "Freeze authority still active or cleared.",
     detail:
       "Whether accounts can be frozen or otherwise blocked from moving tokens.",
   },
   {
+    key: "lp_lock",
     title: "Liquidity posture",
+    field: "LP lock/burn",
+    brief: "Not measured yet. Shows as unknown.",
     detail:
       "Reserved for lock and pool-depth cues when a trustworthy Solana source exists. Unknown for now.",
   },
   {
+    key: "top_holder_pct",
     title: "Holder concentration",
+    field: "Top holder %",
+    brief: "Top account share of supply when RPC can index it.",
     detail:
       "How much supply sits with the largest accounts, and what that means for dump risk.",
   },
+  {
+    key: "liquidity_usd",
+    title: "Market liquidity",
+    field: "Liquidity (USD)",
+    brief: "Reported pool liquidity when a market source has it.",
+    detail:
+      "Reported pool liquidity in USD when a market source has it. Thin books amplify slippage and manipulation risk.",
+  },
+  {
+    key: "age_hours",
+    title: "Token age",
+    field: "Age (hours)",
+    brief: "Estimated age when it can be read.",
+    detail:
+      "Estimated token age when it can be read. Newer tokens have less observable history.",
+  },
 ] as const;
 
-/** Merged empty-state panel: coverage + diligence tips. */
-export const CHECK_GUIDANCE = [
-  {
-    title: "Supply control",
-    detail: "Mint powers that can still change supply.",
-  },
-  {
-    title: "Transfer restrictions",
-    detail: "Freeze authority still active or cleared.",
-  },
-  {
-    title: "Liquidity posture",
-    detail: "Not measured yet. Shows as unknown.",
-  },
-  {
-    title: "Holder concentration",
-    detail: "Top account share of supply when RPC can index it.",
-  },
-  {
-    title: "Before you trust the score",
-    detail:
-      "Use the mint (not a wallet), then verify findings on Solscan.",
-  },
-] as const;
+export const SIGNAL_COUNT = SIGNALS.length;
+
+/** Signal number (1 to 6) for an API signal key, or null when the key is not one of the six. */
+export function signalNumber(key: string): number | null {
+  const index = SIGNALS.findIndex((signal) => signal.key === key);
+  return index === -1 ? null : index + 1;
+}
+
+/** Two-digit label for a signal number, for example 3 becomes "03". */
+export function signalLabel(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+export const CHECK_TIP =
+  "Use the mint (not a wallet), then verify findings on Solscan.";

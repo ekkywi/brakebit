@@ -64,9 +64,15 @@ apps/web/
     │   │   ├── format.ts    Expiry date format
     │   │   └── use-credit-balance.ts  Hook: load balance while enabled (account menu, overview)
     │   ├── dashboard/       User app shell: sidebar, header, account menu, mobile drawer
-    │   │   ├── components/  DashboardShell, DashboardSidebar, DashboardHeader, AccountMenu,
-    │   │   │                MobileNavDrawer, OverviewView
-    │   │   └── nav.ts       Sidebar items and page titles (add a feature here)
+    │   │   ├── components/  DashboardShell (chrome first, content skeleton while session loads),
+    │   │   │                DashboardSidebar, DashboardHeader, AccountMenu, MobileNavDrawer,
+    │   │   │                DashboardSkeleton, OverviewView (credit block + six signals),
+    │   │   │                icons.tsx (in-house icon set + BrandMark)
+    │   │   ├── sidebar-cookie.ts  `brakebit_sidebar` cookie: collapsed or expanded
+    │   │   └── nav.ts       Sidebar items (label, href, icon name) and page titles (add a feature here)
+    │   ├── landing/         Landing hero visuals (see DESIGN.md, Motion)
+    │   │   └── components/  GridBackdrop (canvas, random blink), SignalGrid (4 numbered signal cells).
+    │   │                    Below the hero: `sq-index` numbered squares in globals.css (static)
     │   └── token-check/     Token review feature slice
     │       ├── components/  TokenCheckForm (shared core), GuestCheck, GuestLimitDialog,
     │       │                MemberCheck, ResumeCheckDialog, RiskReportView, ReportSkeleton, RecentChecks
@@ -79,7 +85,7 @@ apps/web/
         ├── content/         Product copy (landing + check)
         ├── lib/             Small utilities (e.g. cn)
         ├── theme/           Theme storage key + FOUC script
-        └── ui/              SiteHeader, ThemeToggle, FieldReportPreview, Dialog
+        └── ui/              SiteHeader, ThemeToggle, FieldReportPreview, Dialog, SignalStrip (six status squares)
 ```
 
 ## `apps/api`

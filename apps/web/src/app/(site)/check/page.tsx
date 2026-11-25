@@ -13,9 +13,7 @@ export default function CheckPage() {
   return (
     <section className="check-stage wrap pb-24 pt-10 md:pt-14">
       <div className="anim-rise mb-6">
-        <p className="font-mono-ui text-xs uppercase tracking-[0.14em] text-[var(--accent)]">
-          Assessment workspace
-        </p>
+        <p className="section-label">Assessment workspace</p>
         <h1 className="mt-2 text-[clamp(1.75rem,3.5vw,2.35rem)] font-semibold tracking-[-0.04em] text-[var(--fg)]">
           Token risk review
         </h1>

@@ -1,12 +1,18 @@
+export type NavIconName = "overview" | "check";
+
 export type DashboardNavItem = {
   href: string;
   label: string;
+  icon: NavIconName;
 };
 
-/** Sidebar items for `/dashboard`. Add a feature here once its page exists. */
+/**
+ * Sidebar items for `/dashboard`. Add a feature here once its page exists.
+ * Pages that are not built yet (for example top-up) stay out of the list.
+ */
 export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
-  { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/check", label: "Check" },
+  { href: "/dashboard", label: "Overview", icon: "overview" },
+  { href: "/dashboard/check", label: "Check", icon: "check" },
 ];
 
 /** True when `pathname` is the item itself or a page nested under it. */

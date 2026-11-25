@@ -1,3 +1,10 @@
+import { signalLabel } from "@/shared/content/product";
+import {
+  SignalStrip,
+  signalStatusColor,
+  type SignalStatus,
+} from "./SignalStrip";
+
 /**
  * Landing sample report. Figures are illustrative only.
  * Shape mirrors RiskReportView: score face, findings, signals, sources.
@@ -19,11 +26,17 @@ export function FieldReportPreview() {
     },
   ];
 
-  const signals = [
-    ["Mint authority", "Active", "var(--bad)"],
-    ["Freeze authority", "Clear", "var(--ok)"],
-    ["LP lock/burn", "Unknown", "var(--muted)"],
-    ["Top holder %", "24%", "var(--warn)"],
+  const signals: ReadonlyArray<{
+    label: string;
+    value: string;
+    status: SignalStatus;
+  }> = [
+    { label: "Mint authority", value: "Active", status: "bad" },
+    { label: "Freeze authority", value: "Clear", status: "ok" },
+    { label: "LP lock/burn", value: "Unknown", status: "unknown" },
+    { label: "Top holder %", value: "24%", status: "warn" },
+    { label: "Liquidity (USD)", value: "48000", status: "ok" },
+    { label: "Age (hours)", value: "5400", status: "ok" },
   ];
 
   return (
@@ -74,7 +87,17 @@ export function FieldReportPreview() {
         </div>
       </div>
 
-      <div className="border-t border-[var(--border)] p-6">
+      <div className="border-b border-[var(--border)] px-6 py-4">
+        <SignalStrip
+          items={signals.map((signal, index) => ({
+            n: index + 1,
+            label: signal.label,
+            status: signal.status,
+          }))}
+        />
+      </div>
+
+      <div className="p-6">
         <p className="text-sm font-medium text-[var(--fg)]">Findings</p>
         <ul className="mt-4 space-y-4">
           {findings.map((item) => (
@@ -106,14 +129,22 @@ export function FieldReportPreview() {
       <div className="border-t border-[var(--border)] p-6">
         <p className="text-sm font-medium text-[var(--fg)]">Signals</p>
         <ul className="mt-3 divide-y divide-[var(--border)]">
-          {signals.map(([label, value, color]) => (
+          {signals.map((signal, index) => (
             <li
-              key={label}
+              key={signal.label}
               className="flex items-center justify-between gap-4 py-3"
             >
-              <span className="text-sm text-[var(--ink-soft)]">{label}</span>
-              <span className="font-mono-ui text-sm" style={{ color }}>
-                {value}
+              <span className="flex items-center gap-3 text-sm text-[var(--ink-soft)]">
+                <span className="sq-index sq-index--sm">
+                  {signalLabel(index + 1)}
+                </span>
+                {signal.label}
+              </span>
+              <span
+                className="font-mono-ui text-sm"
+                style={{ color: signalStatusColor(signal.status) }}
+              >
+                {signal.value}
               </span>
             </li>
           ))}

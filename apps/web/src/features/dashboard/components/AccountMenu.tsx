@@ -5,9 +5,10 @@ import { logoutAuth } from "@/features/auth/api";
 import { useSession } from "@/features/auth/session";
 import { formatExpiry } from "@/features/credits/format";
 import { useCreditBalance } from "@/features/credits/use-credit-balance";
+import { UserIcon } from "./icons";
 
 export function AccountMenu() {
-  const { user, setUser } = useSession();
+  const { user, loading, setUser } = useSession();
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
@@ -37,7 +38,15 @@ export function AccountMenu() {
     };
   }, [open]);
 
-  if (!user) return null;
+  if (!user) {
+    // Same footprint as the button, so the header does not shift when the session arrives.
+    return loading ? (
+      <span
+        aria-hidden
+        className="block h-11 w-11 animate-pulse rounded-full border border-[var(--border)]"
+      />
+    ) : null;
+  }
 
   async function onLogout() {
     setLoggingOut(true);
@@ -67,7 +76,7 @@ export function AccountMenu() {
         aria-label="Account menu"
         className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] text-[var(--fg)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
       >
-        <UserIcon />
+        <UserIcon size={18} />
       </button>
 
       {open ? (
@@ -139,24 +148,5 @@ export function AccountMenu() {
         </div>
       ) : null}
     </div>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" />
-    </svg>
   );
 }

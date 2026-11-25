@@ -19,14 +19,18 @@ Konteks singkat:
 - Kredit: Campaign → CreditLot (punya masa berlaku) + CreditLedger (append-only). Spend memakai lot yang paling cepat kedaluwarsa dulu. Refund 100% jika sistem menilai operasi gagal.
 - Guest: 1 live check gratis per hari (belum dibangun)
 
-Status (per tanggal 24 Nov 2026):
+Status (per tanggal 25 Nov 2026):
 - Phase A login: SELESAI. Tes Phantom manual belum dicatat.
 - Phase B Langkah 1 (skema, migrasi, seed welcome): SELESAI
 - Phase B Langkah 2 (CreditsService): SELESAI, typecheck bersih
 - Phase B Langkah 3 (welcome saat login): SELESAI. Tes manual belum dicatat.
 - Phase B Langkah 4 (GuestUsage + gerbang POST /checks): SELESAI. Jalur guest sudah diuji (live, 401 guest_limit_reached, cache hit). Jalur user login belum diuji.
 - Phase B Langkah 5 (GET /credits/me): SELESAI.
-- Phase B Langkah 6 (web): KODE SELESAI, build lolos. Guest memakai /check, user login memakai /dashboard/check (halaman terpisah). User login yang membuka / atau /check dialihkan ke dashboard di server (middleware.ts), sebelum halaman dikirim. Cookie sesi basi dihapus oleh GET /auth/me. Persiapan deploy: web di Vercel, API di Render, custom domain bersama (lihat AUTH.md, Phase D). Setelah guest kena limit lalu login, user dibawa ke /dashboard/check dan ada popup konfirmasi sebelum check berjalan. Saldo ada di menu akun dan Overview, bukan di header marketing. Tes di browser belum dicatat.
+- Phase B Langkah 6 (web): KODE SELESAI, build lolos. Guest memakai /check, user login memakai /dashboard/check (halaman terpisah). User login yang membuka / atau /check dialihkan ke dashboard di server (middleware.ts), sebelum halaman dikirim. Cookie sesi basi dihapus oleh GET /auth/me. Persiapan deploy: web di Vercel, API di Render, custom domain bersama (lihat AUTH.md, Phase D). Setelah guest kena limit lalu login, user dibawa ke /dashboard/check dan ada popup konfirmasi sebelum check berjalan. Saldo ada di menu akun dan Overview, bukan di header marketing. Tes manual alur utama sudah dilakukan pemilik: login lalu redirect, logout, guest kena limit lalu popup lanjut check. Check member dengan kredit nyata belum dicatat.
+- Landing redesign: KODE SELESAI, build lolos, belum dicek di browser. Hero memakai grid kotak berkedip acak (GridBackdrop, canvas) dan SignalGrid (enam kotak bernomor mewakili enam sinyal). Aksen platform diganti ke signal cyan (#0B7285 terang, #3DD6F5 gelap). Report preview dipindah ke section sendiri di bawah hero. Section di bawah hero ikut diselaraskan (statis, tanpa gerak): Report dua kolom dengan legenda sinyal, Features satu blok utama plus daftar, nomor kotak `sq-index` untuk sinyal dan langkah, label section sentence case, band datar. Detail dan alasan gerak ada di DESIGN.md.
+- Halaman check (publik dan member) diselaraskan: enam sinyal di mana-mana (SIGNALS di product.ts punya key API, nomor = urutan), SignalStrip di report (enam kotak berwarna status, ada isyarat bentuk), kotak scan saat loading, panduan kosong enam kotak bernomor, label sentence case. Belum dicek di browser.
+- Dashboard diselaraskan: shell menampilkan sidebar dan header dulu (skeleton di konten saat sesi dimuat), penanda halaman aktif berbentuk persegi, Overview = blok kredit utama + "What one credit buys" (enam sinyal) + aturan, toggle tema 44px di header, drawer mobile dengan focus trap dan fokus kembali ke pemicu, header halaman check member disamakan. Perlu uji manual: logout dan sesi kedaluwarsa. Belum dicek di browser.
+- Sidebar dashboard: ikon gambar sendiri di tiap menu (icons.tsx), tanda merek 2x2 persegi, penanda aktif berupa kotak berbingkai + ikon cyan + teks tebal, bisa diciutkan jadi rel ikon di desktop (cookie brakebit_sidebar dibaca di dashboard/layout.tsx, jadi layout dashboard dinamis). Top-up tidak ditampilkan sampai fiturnya ada. Belum dicek di browser.
 - BERIKUTNYA: tes manual Langkah 6 di browser, lalu Phase B2 (admin guard) jika saya minta
 
 Mulai dari "BERIKUTNYA", kecuali saya minta topik lain. Cek dulu AUTH.md karena status bisa berubah.

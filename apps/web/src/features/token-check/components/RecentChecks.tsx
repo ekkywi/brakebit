@@ -83,7 +83,7 @@ export function RecentChecks({
       <div className="border-b border-[var(--border)] px-4 py-3 sm:px-5">
         <p
           id="recent-checks-heading"
-          className="font-mono-ui text-xs uppercase tracking-[0.14em] text-[var(--accent)]"
+          className="section-label"
         >
           Recently reviewed
         </p>
