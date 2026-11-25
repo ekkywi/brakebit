@@ -5,6 +5,13 @@ import { CreateCheckDto } from './dto/create-check.dto';
 import { computeRiskScore } from './domain/risk-score';
 import { SolanaTokenProvider } from './providers/solana.provider';
 import { Prisma } from '@brakebit/db';
+import { randomUUID } from 'crypto';
+import { CreditsService } from '../credits/credits.service';
+import { GuestQuotaService } from '../credits/guest-quota.service';
+import { GuestLimitReachedException } from '../credits/guest-limit.error';
+import { CREDIT_COSTS } from '../credits/credits.pricing';
+
+export type CheckCaller = { userId: string | null; ip: string };
 
 const DISCLAIMER =
     `Brakebit provides risk indicators for informational purposes only. This is not investment advice, and a score is not an assurance of safety or performance.`;
@@ -28,16 +35,41 @@ export type RecentCheckItem = {
 export class ChecksService {
     private readonly solanaProvider= new SolanaTokenProvider();
 
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly credits: CreditsService,
+        private readonly guestQuota: GuestQuotaService,
+    ) {}
 
-    async createCheck(dto: CreateCheckDto): Promise<RiskReport> {
+    async createCheck(dto: CreateCheckDto, caller: CheckCaller): Promise<RiskReport> {
         const chain = dto.chain ?? 'solana';
 
         const cached = await this.findFreshCachedReport(dto.address, chain);
         if (cached) return cached;
 
-        const { input, sources, notes, token } =
-            await this.solanaProvider.fetchScoreInput(dto.address);
+        const gated = Boolean(process.env.DATABASE_URL);
+        const refId = randomUUID();
+
+        if (gated) {
+            if (caller.userId) {
+                await this.credits.spend(caller.userId, {
+                    amount: CREDIT_COSTS.live_check,
+                    refId,
+                    reason: 'live_check',
+                });
+            } else if (!(await this.guestQuota.consume(caller.ip))) {
+                throw new GuestLimitReachedException();
+            }
+        }
+
+        let input, sources, notes, token;
+        try {
+            ({ input, sources, notes, token } = await this.solanaProvider.fetchScoreInput(dto.address));
+        } catch (error) {
+            if (gated) await this.refundAllowance(caller, refId);
+            throw error;
+        }
+
         const scored = computeRiskScore(input);
 
         const baseFreshness =
@@ -64,8 +96,16 @@ export class ChecksService {
             },
         };
 
-        await this.saveCheckHistory(report);
+        await this.saveCheckHistory(report, caller.userId);
         return report;
+    }
+
+    private async refundAllowance(caller: CheckCaller, refId: string): Promise<void> {
+        if (caller.userId) {
+            await this.credits.refund(caller.userId, refId);
+        } else {
+            await this.guestQuota.release(caller.ip);
+        }
     }
     
     async listRecent(limit = 20): Promise<RecentCheckItem[]> {
@@ -125,12 +165,13 @@ export class ChecksService {
         }
     }
 
-    private async saveCheckHistory(report: RiskReport): Promise<void> {
+    private async saveCheckHistory(report: RiskReport, userId: string | null ): Promise<void> {
         if (!process.env.DATABASE_URL) return;
 
         try {
             await this.prisma.checkHistory.create({
                 data: {
+                    userId,
                     address: report.address,
                     chain: report.chain,
                     score: report.score,

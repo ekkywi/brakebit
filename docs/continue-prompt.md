@@ -24,7 +24,10 @@ Status (per tanggal 24 Nov 2026):
 - Phase B Langkah 1 (skema, migrasi, seed welcome): SELESAI
 - Phase B Langkah 2 (CreditsService): SELESAI, typecheck bersih
 - Phase B Langkah 3 (welcome saat login): SELESAI. Tes manual belum dicatat.
-- BERIKUTNYA: Phase B Langkah 4 (GuestUsage + gerbang POST /checks)
+- Phase B Langkah 4 (GuestUsage + gerbang POST /checks): SELESAI. Jalur guest sudah diuji (live, 401 guest_limit_reached, cache hit). Jalur user login belum diuji.
+- Phase B Langkah 5 (GET /credits/me): SELESAI.
+- Phase B Langkah 6 (web): KODE SELESAI, build lolos. Guest memakai /check, user login memakai /dashboard/check (halaman terpisah). User login yang membuka / atau /check dialihkan ke dashboard di server (middleware.ts), sebelum halaman dikirim. Cookie sesi basi dihapus oleh GET /auth/me. Persiapan deploy: web di Vercel, API di Render, custom domain bersama (lihat AUTH.md, Phase D). Setelah guest kena limit lalu login, user dibawa ke /dashboard/check dan ada popup konfirmasi sebelum check berjalan. Saldo ada di menu akun dan Overview, bukan di header marketing. Tes di browser belum dicatat.
+- BERIKUTNYA: tes manual Langkah 6 di browser, lalu Phase B2 (admin guard) jika saya minta
 
 Mulai dari "BERIKUTNYA", kecuali saya minta topik lain. Cek dulu AUTH.md karena status bisa berubah.
 ```

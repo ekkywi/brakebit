@@ -13,6 +13,7 @@ import type { Request, Response } from 'express';
 import { assertAllowedOrigin } from './assert-origin';
 import { SESSION_COOKIE } from './auth.constants';
 import { AuthService } from './auth.service';
+import { clearSessionCookie, setSessionCookie } from './session-cookie';
 import { NonceDto } from './dto/nonce.dto';
 import { VerifyDto } from './dto/verify.dto';
 import { CreditsService } from '../credits/credits.service';
@@ -63,13 +64,7 @@ export class AuthController {
       const result = await this.authService.verifySignIn(dto);
       await this.claimWelcome(result.user.id);
 
-      res.cookie(SESSION_COOKIE, result.sessionToken, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: result.sessionMaxAgeMs,
-        path: '/',
-      });
+      setSessionCookie(res, result.sessionToken, result.sessionMaxAgeMs);
 
       return { user: result.user };
     } catch (error) {
@@ -90,15 +85,20 @@ export class AuthController {
     assertAllowedOrigin(req);
     const token = req.cookies?.[SESSION_COOKIE] as string | undefined;
     await this.authService.logout(token);
-    res.clearCookie(SESSION_COOKIE, { path: '/' });
+    clearSessionCookie(res);
     return { ok: true };
   }
 
   @Get('me')
-  async me(@Req() req: Request) {
+  async me(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const token = req.cookies?.[SESSION_COOKIE] as string | undefined;
     const user = await this.authService.me(token);
     if (!user) {
+      // A stale cookie (expired or revoked) is removed here, so middleware stops treating the visitor as signed in.
+      if (token) clearSessionCookie(res);
       throw new UnauthorizedException({
         code: 'NOT_AUTHENTICATED',
         message: 'Not signed in',

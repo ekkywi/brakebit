@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { TokenCheckForm } from "@/features/token-check/components/TokenCheckForm";
+import { GuestCheck } from "@/features/token-check/components/GuestCheck";
 
 function CheckFormFallback() {
   return (
@@ -26,7 +26,7 @@ export default function CheckPage() {
       </div>
 
       <Suspense fallback={<CheckFormFallback />}>
-        <TokenCheckForm />
+        <GuestCheck />
       </Suspense>
     </section>
   );

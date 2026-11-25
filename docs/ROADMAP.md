@@ -55,7 +55,7 @@ Solana only in shared types and UI. Other chains stay off the product surface un
 | Mint age | Phase 1 only: full 1000-signature page → age stays unknown (no deep pagination yet) |
 | LP / liquidity | Still `unknown` until a trustworthy source exists |
 | Auth / per-user history | Recently reviewed is global (anon); per signed-in user history not built |
-| Auth / credits | Phase A wallet login **done**; Phase B Langkah 1–3 **done** (campaign lots, ledger, `CreditsService`, welcome on login); guest quota + credit gate, admin campaign dashboard, and USDC top-up still open — [`AUTH.md`](./AUTH.md) |
+| Auth / credits | Phase A wallet login **done**; Phase B Langkah 1–6 **done** in code (campaign lots, ledger, welcome on login, guest quota, credit gate, `/credits/me`, `/dashboard` with balance and guest modal; browser test pending); admin campaign dashboard and USDC top-up still open — [`AUTH.md`](./AUTH.md) |
 | Observability | No request id / provider latency metrics yet |
 
 ---
@@ -78,7 +78,7 @@ Priorities are intentional. Finish each band before inventing adjacent product s
 1. Rate limiting on `POST /checks` — **done**
 2. Token name/symbol search — **done**
 3. Global recently-reviewed mints UI (unique by address from Neon) — **done**; optional auth for per-user history still open
-4. Pay-as-you-go credits (crypto top-up preferred) — see [`AUTH.md`](./AUTH.md); **Phase A done**; Phase B Langkah 1–3 done (campaigns, expiring lots, ledger, welcome 10 credits / 7 days on login); next guest 1 free live check/day and credit gate on `POST /checks`; then admin campaign dashboard, then USDC top-up
+4. Pay-as-you-go credits (crypto top-up preferred) — see [`AUTH.md`](./AUTH.md); **Phase A done**; Phase B Langkah 1–6 done in code (campaigns, expiring lots, ledger, welcome 10 credits / 7 days, guest 1 free check/day, credit gate, `/dashboard` balance); next browser-test Langkah 6, then admin campaign dashboard (Phase B2), then USDC top-up
 5. Stronger address validation / dead-mint messaging
 6. Basic observability (request id, provider latency, failure reasons)
 7. Optional force-refresh to bypass check cache (e.g. `?fresh=1` / UI control)

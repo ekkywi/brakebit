@@ -5,6 +5,8 @@ export type AppEnv = {
   NODE_ENV: 'development' | 'production' | 'test';
   API_PORT: number;
   CORS_ORIGIN: string;
+  /** Number of reverse proxies in front of the API (Render = 1). 0 means trust none. */
+  TRUST_PROXY_HOPS: number;
   DATABASE_URL?: string;
   DIRECT_URL?: string;
   SOLANA_RPC_URL?: string;
@@ -60,11 +62,18 @@ export function loadEnv(): AppEnv {
     throw new Error('API_PORT must be a positive number');
   }
 
+  const trustProxyHops = Number(process.env.TRUST_PROXY_HOPS ?? 0);
+
+  if (!Number.isInteger(trustProxyHops) || trustProxyHops < 0) {
+    throw new Error('TRUST_PROXY_HOPS must be a non-negative integer');
+  }
+
   return {
     NODE_ENV:
       (process.env.NODE_ENV as AppEnv['NODE_ENV'] | undefined) ?? 'development',
     API_PORT: port,
     CORS_ORIGIN: process.env.CORS_ORIGIN ?? 'http://localhost:3000',
+    TRUST_PROXY_HOPS: trustProxyHops,
     DATABASE_URL: process.env.DATABASE_URL,
     DIRECT_URL: process.env.DIRECT_URL,
     SOLANA_RPC_URL: process.env.SOLANA_RPC_URL,

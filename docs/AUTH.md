@@ -65,8 +65,11 @@ Update the status table here whenever a phase ships.
 
 | Piece | Status |
 |---|---|
-| Anonymous checks + IP rate limit | Done (unlimited today; daily guest quota is Phase B) |
-| Guest daily quota (1 free live check/day) | **Not started** (Phase B) |
+| Anonymous checks + IP rate limit | Done (plus daily guest quota below) |
+| Guest daily quota (1 free live check/day) | **Done** (Phase B Langkah 4; `GuestQuotaService`, atomic upsert, UTC day) |
+| Credit gate on `POST /checks` (spend, 402, refund on system failure) | **Done** (Phase B Langkah 4; live check tested with guest flow, signed-in flow pending) |
+| `GET /credits/me` (two buckets) | **Done** (Phase B Langkah 5) |
+| Web dashboard `/dashboard` (overview, balance, guest modal, insufficient-credit link) | **Built** (Phase B Langkah 6; browser test pending) |
 | `CheckHistory` persist + recent unique mints | Done |
 | Check cache TTL (default 5m) | Done |
 | Screener check UI (toolbar + table + report panel) | Done |
@@ -77,7 +80,6 @@ Update the status table here whenever a phase ships.
 | `Campaign` + `CreditLot` + `CreditLedger` + `GuestUsage` tables + seed `welcome` | **Done** (Phase B Langkah 1) |
 | `CreditsService`: claim campaign, atomic spend, 100% refund, balance | **Done** (Phase B Langkah 2) |
 | Welcome claim on first successful wallet login | **Done** (Phase B Langkah 3; manual test pending) |
-| Gate `POST /checks` by credits | **Not started** (Phase B) |
 | Admin guard + campaign dashboard | **Not started** (Phase B2) |
 | Crypto top-up (Solana USDC / Solana Pay) | **Not started** (Phase C) |
 | Force-refresh bypass cache | Not started (ROADMAP P1) |
@@ -97,7 +99,7 @@ Update the status table here whenever a phase ships.
 
 **Out of scope for Phase A (still):** spending credits, payment UI, email auth, gating checks behind balance.
 
-**How to try:** install Phantom, open the site, click **Sign in**, approve the message. `/auth/me` should succeed with credentials. **Log out** clears the cookie.
+**How to try:** install Phantom, open the site, click **Sign in**, approve the message. You land on `/dashboard`, and `/auth/me` succeeds with credentials. **Log out** clears the cookie.
 
 ### Phase B — Credits (campaigns, lots, ledger)
 
@@ -137,12 +139,28 @@ Ledger `type` values (small on purpose): `promo_grant`, `purchase`, `spend`, `re
 1. Prisma: `Campaign`, `CreditLot`, `CreditLedger` + migration; seed the welcome campaign. — **done**
 2. Service: grant (campaign claim), spend (transaction + lot ordering), refund, balance query (non-expired lots). — **done** (`apps/api/src/modules/credits/`)
 3. Hook `first_login` campaign into successful wallet verify (idempotent). — **done** (`claimWelcome` in `auth.controller.ts`)
-4. Prisma: `GuestUsage` (`ipHash`, `day`, `count`, unique on `ipHash + day`) — table **done**; env for the IP hash salt (e.g. `GUEST_IP_SALT`) and `GUEST_DAILY_FREE_CHECKS` (default 1) — **not started**.
+4. Prisma: `GuestUsage` (`ipHash`, `day`, `count`, unique on `ipHash + day`) — **done**; env `GUEST_IP_SALT` and `GUEST_DAILY_FREE_CHECKS` — **done**; gate on `POST /checks` — **done** (guest path tested; signed-in path pending).
 5. Gate `POST /checks` (cache hit is always free):
    - Guest: consume daily quota, else `401 guest_limit_reached`.
    - Signed in: spend 1 credit, else `402 insufficient_credits`.
-6. `GET /credits/me` behind `SessionAuthGuard`: `{ topup: { balance }, promo: { balance, soonestExpiresAt } }`.
-7. Web: balance in header with the two buckets; sign-in prompt on `guest_limit_reached`; top-up hint on `insufficient_credits` (real top-up arrives in Phase C).
+6. `GET /credits/me` behind `SessionAuthGuard`: `{ topup: { balance }, promo: { balance, soonestExpiresAt } }`. — **done** (Langkah 5)
+7. Web (Langkah 6) — **built, browser test pending**:
+   - Guests and signed-in users use **separate pages** because their access differs. Guests use `/check` (public, marketing chrome, one free live check per day). Signed-in users use `/dashboard/check` (app shell, 1 credit per live check). Both share `TokenCheckForm`; the access rules live in `GuestCheck` and `MemberCheck`.
+   - The marketing header (`(site)` group) shows only a Sign in button for guests. It shows no Dashboard link, wallet, or Log out.
+   - **Redirects happen on the server** (`apps/web/src/middleware.ts`), before any HTML is sent. A visitor with the session cookie who opens `/` or `/check` goes to `/dashboard` or `/dashboard/check` (query string kept). A visitor without it who opens `/dashboard` goes to `/`. The middleware checks only that the cookie exists. The API stays the authority.
+   - **Stale cookies:** `GET /auth/me` clears the cookie when the session is invalid. If the dashboard still finds no session, it sends the visitor to `/?signedout=1`, which the middleware ignores. That breaks the loop with a stale cookie.
+   - `RedirectIfSignedIn` (client) covers only the case where the user signs in while already on a public page. Routes are defined once in `features/auth/routes.ts` and shared by both.
+   - Session cookie: `httpOnly`, `sameSite=lax`, `secure` in production, `Domain` from `SESSION_COOKIE_DOMAIN` (empty locally, `.brakebit.com` in production). Set and clear use the same options (`session-cookie.ts`).
+   - Other public pages stay visible to everyone.
+   - Sign-in from the marketing header lands on `/dashboard`.
+   - `/dashboard` has no sign-in page of its own. Without a session (logout, expiry, or a guest opening the URL) `DashboardShell` redirects to `/`.
+   - `/dashboard` is the user app, with its own sidebar and header and no marketing chrome. The header has an account icon. Opening it shows the wallet and the two buckets (top-up with no expiry, promo with soonest expiry), fetched from `/credits/me` only while the menu is open. It also has Log out.
+   - `/dashboard` (Overview) shows the same buckets in larger cards and explains how credits are used. Future features get their own `/dashboard/<feature>` route and a line in `nav.ts`.
+   - On small screens the sidebar opens in a drawer from the header.
+   - `guest_limit_reached` opens a modal with **Sign in with Phantom**. After sign-in the mint is saved in `sessionStorage` (10 minute limit, read once), and the user is redirected to `/dashboard/check`, with the mint prefilled. A confirmation dialog asks "Continue your check?" and shows the cost and balance. The check does **not** run until the user confirms, because it spends a credit.
+   - `insufficient_credits` shows an error on `/dashboard/check` with a link to `/dashboard`. Real top-up arrives in Phase C.
+   - Web API calls send cookies (`credentials: "include"`) through one helper, `shared/api/client.ts`.
+   - `/admin` is reserved for Phase B2. It has no page yet.
 
 ### Phase B2 — Admin campaign dashboard (after Phase B core)
 
@@ -162,6 +180,7 @@ Ledger `type` values (small on purpose): `promo_grant`, `purchase`, `spend`, `re
 
 ### Phase D — Hardening
 
+- **Deployment (planned):** web on Vercel at `https://brakebit.com`, API on Render at `https://api.brakebit.com`. Required settings: `CORS_ORIGIN=https://brakebit.com`, `AUTH_DOMAIN=brakebit.com`, `SESSION_COOKIE_DOMAIN=.brakebit.com`, `TRUST_PROXY_HOPS=1` on the API, and `NEXT_PUBLIC_API_URL=https://api.brakebit.com` on the web. Vercel preview URLs are a different site, so they cannot use the cookie against the production API. Test previews separately. Verify that guest quota counts different IPs before launch.
 - Force-refresh to bypass check cache (paid live re-check).
 - Optional email link for recovery (still no required password).
 - Observability: auth failures, payment anomalies, spend errors.
@@ -199,7 +218,7 @@ Reject verify when: wrong domain in message, reused nonce, expired nonce, bad si
 ## Handoff checklist for the next agent / machine
 
 1. Read [`AUTH.md`](./AUTH.md) (this file), [`ROADMAP.md`](./ROADMAP.md), [`STRUCTURE.md`](./STRUCTURE.md), [`DESIGN.md`](./DESIGN.md) for any UI.
-2. Phase A is done. Phase B Langkah 1–3 are done. Next is **Phase B Langkah 4** (guest quota logic + credit gate on `POST /checks`) unless the user asks otherwise. Pending manual tests: Phantom sign-in (Phase A) and welcome claim (Phase B Langkah 3). Track them in [`continue-prompt.md`](./continue-prompt.md). Product decisions (guest quota, welcome 10 credits / 7 days, two-bucket balance UI) are agreed; see "Product decisions for Phase B".
+2. Phase A is done. Phase B Langkah 1–6 are done in code (Langkah 6 web is built but not yet tested in the browser). Next is **Phase B2 / admin guard** or manual web tests, as the user decides. Pending manual tests: Phantom sign-in (Phase A), welcome claim (Phase B Langkah 3), signed-in check path, and the Langkah 6 browser flow. Track them in [`continue-prompt.md`](./continue-prompt.md). Product decisions (guest quota, welcome 10 credits / 7 days, two-bucket balance UI, balance lives on `/dashboard` not in the header) are agreed; see "Product decisions for Phase B".
 3. Do not invent trading, custody, or multi-chain payment stubs.
 4. After shipping a phase: update the status table above and the matching ROADMAP rows.
 5. Security: follow the Phase A checklist; do not weaken nonce/session rules for convenience.

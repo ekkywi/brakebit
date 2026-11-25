@@ -1,9 +1,19 @@
 "use client";
 
-import { FormEvent, useEffect, useId, useRef, useState } from "react";
+import {
+  FormEvent,
+  useEffect,
+  useId,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type ReactNode,
+  type Ref,
+} from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { RiskReport } from "@brakebit/shared";
 import { CHECK_GUIDANCE, SAMPLE_CHECK } from "@/shared/content/product";
+import { ApiError } from "@/shared/api/client";
 import {
   createTokenCheck,
   searchTokens,
@@ -19,7 +29,22 @@ import { RecentChecks } from "./RecentChecks";
 import { ReportSkeleton } from "./ReportSkeleton";
 import { RiskReportView } from "./RiskReportView";
 
-export function TokenCheckForm() {
+export type TokenCheckFormHandle = {
+  /** Fills the mint and runs a live check. */
+  run: (mint: string) => void;
+};
+
+type Props = {
+  ref?: Ref<TokenCheckFormHandle>;
+  /** Access note shown under the toolbar, for example the cost of a check. */
+  notice?: ReactNode;
+  /** Return true when the error is handled elsewhere, so no inline alert is shown. */
+  onApiError?: (error: ApiError, context: { mint: string }) => boolean;
+  /** Extra content under the inline alert, chosen by the API error code. */
+  errorAction?: (code: string | null) => ReactNode;
+};
+
+export function TokenCheckForm({ ref, notice, onApiError, errorAction }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -33,6 +58,7 @@ export function TokenCheckForm() {
   const [searchError, setSearchError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
   const [report, setReport] = useState<RiskReport | null>(null);
   const [exampleNote, setExampleNote] = useState<string | null>(() =>
     searchParams.get("example") === "1" ? SAMPLE_CHECK.note : null,
@@ -143,6 +169,7 @@ export function TokenCheckForm() {
 
     setLoading(true);
     setError(null);
+    setErrorCode(null);
     setReport(null);
 
     try {
@@ -154,11 +181,24 @@ export function TokenCheckForm() {
       setRecentRefresh((n) => n + 1);
     } catch (err) {
       setReport(null);
+      if (err instanceof ApiError && onApiError?.(err, { mint: trimmed })) {
+        return;
+      }
       setError(err instanceof Error ? err.message : "Something went wrong");
+      setErrorCode(err instanceof ApiError ? err.code : null);
     } finally {
       setLoading(false);
     }
   }
+
+  useImperativeHandle(ref, () => ({
+    run(mint: string) {
+      setAddress(mint.trim());
+      setSelectedLabel(null);
+      setExampleNote(null);
+      void runCheck(mint);
+    },
+  }));
 
   function pickRecent(item: RecentCheckItem) {
     const name = item.token?.name?.trim();
@@ -205,6 +245,7 @@ export function TokenCheckForm() {
                 className="field-input"
                 autoComplete="off"
                 spellCheck={false}
+                role="combobox"
                 aria-autocomplete="list"
                 aria-controls={`${searchListId}-results`}
                 aria-expanded={searchOpen && searchHits.length > 0}
@@ -218,7 +259,7 @@ export function TokenCheckForm() {
                 className="token-search-results"
               >
                 {searchHits.map((hit) => (
-                  <li key={hit.mint} role="option">
+                  <li key={hit.mint} role="option" aria-selected={false}>
                     <button
                       type="button"
                       className="token-search-hit"
@@ -332,10 +373,19 @@ export function TokenCheckForm() {
         </div>
       </form>
 
+      {notice ? (
+        <div className="text-xs leading-relaxed text-[var(--muted)]">
+          {notice}
+        </div>
+      ) : null}
+
       {error ? (
-        <p role="alert" className="alert-error">
-          {error}
-        </p>
+        <div className="space-y-2">
+          <p role="alert" className="alert-error">
+            {error}
+          </p>
+          {errorAction?.(errorCode)}
+        </div>
       ) : null}
 
       <div

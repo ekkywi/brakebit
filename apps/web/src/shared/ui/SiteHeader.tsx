@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { WalletAuthButton } from "@/features/auth/components/WalletAuthButton";
+import { SignInButton } from "@/features/auth/components/SignInButton";
 import { ThemeToggle } from "@/shared/ui/ThemeToggle";
 
 export function SiteHeader() {
@@ -21,7 +21,7 @@ export function SiteHeader() {
           <Link href="/#how" className="nav-link hidden sm:inline">
             How it works
           </Link>
-          <WalletAuthButton />
+          <SignInButton />
           <ThemeToggle />
           <Link href="/check" className="btn btn-primary btn-sm whitespace-nowrap">
             Start a review

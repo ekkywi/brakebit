@@ -8,6 +8,7 @@ import { TokensModule } from './modules/tokens/tokens.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
 import { CreditsModule } from './modules/credits/credits.module';
+import { CreditsApiModule } from './modules/credits/credits-api.module';
 
 function checksRateLimit(): number {
   const value = Number(process.env.CHECKS_RATE_LIMIT ?? 10);
@@ -27,7 +28,7 @@ function checksRateTtlMs(): number {
     TokensModule,
     AuthModule,
     CreditsModule,
-    // Unnamed throttler = "default" so @Throttle/@SkipThrottle({ default }) match.
+    CreditsApiModule,
     ThrottlerModule.forRoot([
       {
         ttl: checksRateTtlMs(),

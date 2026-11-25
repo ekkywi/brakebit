@@ -38,27 +38,48 @@ Not committed (see `.gitignore`): `node_modules/`, `.env`, `.next/`, `dist/`, `.
 apps/web/
 ├── public/                  Static assets (add files here when needed)
 └── src/
-    ├── app/                 Routes + global chrome
-    │   ├── layout.tsx       Header, footer, theme boot script
-    │   ├── page.tsx         Landing
-    │   ├── check/page.tsx   Assessment workspace
+    ├── middleware.ts        Server redirects by session cookie (before render)
+    ├── app/                 Routes + root document
+    │   ├── layout.tsx       html, fonts, theme boot script, SessionProvider
+    │   ├── not-found.tsx    404
+    │   ├── (site)/          Public marketing chrome (route group, no URL segment)
+    │   │   ├── layout.tsx   SiteHeader, footer
+    │   │   ├── page.tsx     Landing
+    │   │   └── check/page.tsx  Guest check workspace (GuestCheck)
+    │   ├── dashboard/       User app shell (`/dashboard`): own sidebar + header
+    │   │   ├── page.tsx     Overview
+    │   │   └── check/page.tsx  Member check workspace (MemberCheck)
+    │   ├── admin/           Reserved for Phase B2 (no page yet)
     │   └── globals.css      Tokens, light/dark, components
     ├── features/
     │   ├── auth/            Wallet sign-in (Phantom → /auth/*)
-    │   │   ├── components/  WalletAuthButton
+    │   │   ├── components/  SignInButton, RedirectIfSignedIn (client, sign-in on a public page)
+    │   │   ├── routes.ts    Cookie name, public → app route map, signed-out URL (shared with middleware)
     │   │   ├── lib/         Phantom helper, short address
+    │   │   ├── session.tsx  SessionProvider + useSession (one /auth/me per page load)
+    │   │   ├── sign-in.ts   Phantom connect → nonce → sign → verify
     │   │   └── api.ts       Client → Nest `/auth/*` (credentials)
+    │   ├── credits/         Client → Nest `/credits/me` (balance buckets)
+    │   │   ├── api.ts
+    │   │   ├── format.ts    Expiry date format
+    │   │   └── use-credit-balance.ts  Hook: load balance while enabled (account menu, overview)
+    │   ├── dashboard/       User app shell: sidebar, header, account menu, mobile drawer
+    │   │   ├── components/  DashboardShell, DashboardSidebar, DashboardHeader, AccountMenu,
+    │   │   │                MobileNavDrawer, OverviewView
+    │   │   └── nav.ts       Sidebar items and page titles (add a feature here)
     │   └── token-check/     Token review feature slice
-    │       ├── components/  TokenCheckForm, RiskReportView, ReportSkeleton, RecentChecks
+    │       ├── components/  TokenCheckForm (shared core), GuestCheck, GuestLimitDialog,
+    │       │                MemberCheck, ResumeCheckDialog, RiskReportView, ReportSkeleton, RecentChecks
     │       ├── hooks/       Reserved (.gitkeep)
-    │       ├── lib/         Address helpers, explorers, formatters
+    │       ├── lib/         Address helpers, explorers, formatters, pending-check (guest → member handoff)
     │       └── api.ts       Client → Nest `/checks`, `/checks/recent`, `/tokens/search`
     └── shared/
+        ├── api/             `apiRequest` + `ApiError` (cookies, error code)
         ├── config/          Public env (API base URL)
         ├── content/         Product copy (landing + check)
         ├── lib/             Small utilities (e.g. cn)
         ├── theme/           Theme storage key + FOUC script
-        └── ui/              SiteHeader, ThemeToggle, FieldReportPreview
+        └── ui/              SiteHeader, ThemeToggle, FieldReportPreview, Dialog
 ```
 
 ## `apps/api`

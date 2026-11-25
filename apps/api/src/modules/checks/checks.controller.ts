@@ -2,25 +2,49 @@ import {
   BadRequestException,
   Body,
   Controller,
-  HttpCode,
-  Post,
   Get,
+  HttpCode,
+  HttpException,
+  Post,
   Query,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
+import { AuthService } from '../auth/auth.service';
+import { SESSION_COOKIE } from '../auth/auth.constants';
 import { ChecksService } from './checks.service';
 import { CreateCheckDto } from './dto/create-check.dto';
 
 @Controller('checks')
 export class ChecksController {
-  constructor(private readonly checksService: ChecksService) {}
+  constructor(
+    private readonly checksService: ChecksService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
   @HttpCode(200)
-  async create(@Body() body: unknown) {
+  async create(@Req() req: Request, @Body() body: unknown) {
+    let dto: CreateCheckDto;
     try {
-      const dto = CreateCheckDto.parse(body);
-      return await this.checksService.createCheck(dto);
+      dto = CreateCheckDto.parse(body);
     } catch (error) {
+      throw new BadRequestException({
+        code: `INVALID_CHECK_REQUEST`,
+        message: error instanceof Error ? error.message : 'Invalid request',
+      });
+    }
+
+    const token = req.cookies?.[SESSION_COOKIE] as string | undefined;
+    const user = token ? await this.authService.me(token) : null;
+
+    try {
+      return await this.checksService.createCheck(dto, {
+        userId: user?.id ?? null,
+        ip: req.ip ?? 'unknown',
+      });
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new BadRequestException({
         code: 'INVALID_CHECK_REQUEST',
         message: error instanceof Error ? error.message : 'Invalid request',
@@ -37,5 +61,3 @@ export class ChecksController {
     };
   }
 }
-
-
