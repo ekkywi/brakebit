@@ -10,9 +10,11 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <SiteHeader />
       <main>{children}</main>
       <footer className="border-t border-[var(--border)]">
-        <div className="wrap flex flex-col gap-3 py-10 text-sm text-[var(--muted)] sm:flex-row sm:items-start sm:justify-between">
-          <p className="font-medium text-[var(--fg)]">Brakebit</p>
-          <p className="max-w-lg sm:text-right">
+        <div className="sheet grid text-sm text-[var(--muted)] sm:grid-cols-12">
+          <p className="cell py-8 font-medium text-[var(--fg)] sm:col-span-4 sm:border-r sm:border-[var(--border)] sm:py-10">
+            Brakebit
+          </p>
+          <p className="cell max-w-xl border-t border-[var(--border)] py-8 sm:col-span-8 sm:border-t-0 sm:py-10">
             Risk indicators only. Brakebit does not execute trades, custody
             assets, or offer investment advice. Always verify findings against
             primary sources before you buy.

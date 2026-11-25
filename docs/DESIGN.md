@@ -1,6 +1,8 @@
 # Brakebit Design Direction
 
-Dial: ENERGY 3 / RHYTHM 2 / MOTION 4 (hero only). Every other section stays at MOTION 2.
+Dial: ENERGY 4 / RHYTHM 4 / MOTION 2. The only motion on the landing is the hero strip lighting up when a mint is ready, plus hover and selection states.
+
+Design Read (25 Nov 2026, owner choice, round 3, no external reference): the squares stay, and the page is redesigned as a spec sheet. One centered sheet (`.sheet`, max `80rem`) with visible hairline rules as the grid; every section is a row of that grid. Character comes from scale, not decoration: oversized type, giant mono numerals, and exactly one filled cyan tile per section as the focal point. Real squares (the hero strip is 1:1 tiles), no rounded cards, no random blinking field. Antislop audit 001 is in `anti-slop/audit-001-2026-11-25.md`.
 
 ## Product
 
@@ -12,11 +14,11 @@ Global retail crypto users who want a calm, trustworthy second look before buyin
 
 ## Personality
 
-Developer-grade product site, in the spirit of Vercel and Render. Quiet and precise below the fold. The hero is the one place that moves: a field of squares that blink at random, like a scan reading many values at once. One signature accent (signal cyan) marks the platform.
+A precise instrument, written like a spec sheet: plain statements, numbered parts, hairline rules. No external site is the reference (owner decision, 25 Nov 2026). One signature accent (signal cyan) marks the platform.
 
 ## Visual language
 
-Light (or dark) page, near-black/near-white type, thin borders. The hero sits on a sparse square grid. A smaller grid on the right holds six numbered cells, one per signal a report covers (the six rows every report carries, in API order). The risk report preview moves to its own section below the hero and stays the proof of the product. One cyan accent for marks, section labels, and lit squares. Risk colors stay reserved for report severity.
+Light (or dark) page, near-black/near-white type, 1px hairlines instead of cards. The hero ends in a strip of six numbered square tiles, one per signal a report covers (the six rows every report carries, in API order). The risk report preview sits in its own band below the hero (it follows the theme) and stays the proof of the product. One cyan accent for numerals, lit squares, and the focal tile of each section. Risk colors stay reserved for report severity.
 
 Light/dark is user-controlled via a sun/moon switcher. Preference persists in `localStorage` and respects system preference on first visit.
 
@@ -38,34 +40,39 @@ Display: tight tracking (`-0.04em`), weight 600. Body: 15–16px, muted gray.
 | Foreground | `#0A0A0A` | `#EDEDED` | Text, primary button |
 | Muted | `#666666` | `#A1A1A1` | Supporting text |
 | Border | `#E6E8EC` | `#333333` | Edges |
-| Accent (signal cyan) | `#0B7285` | `#3DD6F5` | Marks, section labels, lit squares |
+| Accent (signal cyan) | `#0B7285` | `#3DD6F5` | Numerals, lit squares, focal tile |
 | Ok / Warn / Bad | existing | existing | Report severity only |
 
 Contrast (antislop checker): `#0B7285` on `#FFFFFF` 5.59:1, on `#F7F8FA` 5.26:1; `#3DD6F5` on `#0A0A0A` 11.44:1, on `#111111` 10.91:1.
 
-Why cyan: it sits away from the risk colors (green ok, amber warn, red bad), so a brand mark is never read as a verdict. Teal and green families are avoided for that reason. Orange is avoided to keep the platform distinct from the reference that inspired the hero.
+Why cyan: it sits away from the risk colors (green ok, amber warn, red bad), so a brand mark is never read as a verdict. Teal and green families are avoided for that reason. Orange is avoided so the accent is not read as a warning.
 
 ## Layout
 
-1. Landing: grid hero (headline + CTAs on the left, signal grid on the right), report section (report on the left, signal-to-row legend on the right, mirrored from the hero), features (one flagship block, three supporting items as a plain list), how + signals (two columns), CTA band. Section bands alternate flat `--bg` and flat `--subtle`.
+1. Landing, in order. Every section sits inside `.sheet` and is split into rows by 1px rules. `.cell` gives the same inline padding as the header. Each section has one focal tile or one oversized element, and a different heading scale.
+   - Hero: mono meta line, then the headline at up to `8rem` over two lines. The full stop is a cyan square (`.stop`), the brand motif used as punctuation; the heading has an `aria-label` with a normal period. Below a rule: the intro on the left, the mint field on the right (label, input, "Review this mint", "Try the BONK example"). Below another rule: a strip of six square tiles (1:1 from 1024px, 3 by 2 on tablets, 2 by 3 on phones), one per signal, with the number in large mono. The field only opens `/check` with `chain` and `address` filled in. The check, and any guest quota, runs only when the visitor starts it there.
+   - Report: follows the theme on a `--subtle` band (never forced dark; owner asked for this on 25 Nov 2026). The sample report is on the left. On the right: a mono label, the heading, and a reading guide with three buttons (score and level, signals at a glance, findings and sources). Hover or focus previews a part, a click or tap pins it; the matching part of the report gets a cyan inset outline and the rest dims to 35%. Parts are marked with `data-part` in `FieldReportPreview`. The only dark element here is the score face (`.instrument-face`), which is also dark in the real report.
+   - Product: no label. An oversized statement, then three cells on one row: a filled cyan tile with `4/6` in giant mono (counted from `readToday` in `SIGNALS`, so it cannot drift from the data), "What a check reads" (filled square marker), and "What Brakebit never does" (outlined square marker). Lists live in `READS` and `NEVER` in `shared/content/product.ts`.
+   - Signals: heading and note on one row, then a board of six tiles on shared hairlines beside one filled panel with a giant number for the selected signal. Tiles are buttons with `aria-pressed`; the panel is `aria-live`. Dashed tiles are the signals with `readToday: false` (LP lock, liquidity), matching the dashed Unknown square in the report.
+   - CTA: one row of the sheet, like the sections above: hairline on top, heading at the same scale as Report and Signals, muted paragraph on the left, the two buttons in a cell with a hairline on the left (stacked on the right on desktop). No full-width accent block: the closing section is not a focal tile.
+   - Footer: same sheet, two cells separated by a rule.
+   The Workflow section was removed because its three numbered steps were the template pattern.
 2. Check (screener-lite): quiet top wash; compact toolbar (search + mint + generate); recently-reviewed table (unique mint, latest score); report as sticky side panel on desktop / stacked on mobile. No price/volume columns.
-3. Radius `12px` cards, `999px` buttons, `3px` grid squares. Content max width `80rem`
+3. Landing tiles and sheet cells are square-cornered. App cards keep radius `12px`, buttons `999px`, the numbered `sq-index` square `3px`. Content max width `80rem`
 4. Sticky header solid `var(--bg)` + bottom border (no glass)
 
 ## Motion
 
-Hero (MOTION 4), purpose written down:
+Hero (MOTION 2), purpose written down:
 
-- Blinking squares: show that a check reads many values, not one. Random order, no pattern to follow, so it never asks for attention in one place.
-- Hover on the signal grid: fast to light, slow to fade, with a short trail across neighbours. It confirms the pointer position and invites the six numbered cells.
-- Numbered cells are the only interactive squares. Hover, focus, or tap shows what each signal reads in the caption under the grid.
+- Mint ready: once the hero field holds a mint of plausible length, the tiles for the signals that can be read light up in order (01, 02, 04, 06), each 0.11s after the last, and stay lit. It shows which signals the check will read for that mint. The two with no data source stay dashed and unlit. Lit tiles change their status text from "Read today" to "Will read". Nothing is fetched, and the line under the strip says how many signals are read and that LP lock and liquidity show Unknown. The delay applies only when lighting; clearing the field resets at once.
+- The previous random blinking field and the pointer trail were removed (round 3). They showed no information and made every page look alike.
 
 Limits:
 
-- Background grid runs on one `<canvas>`, about 30fps, device pixel ratio capped at 2. It pauses when the tab is hidden or the hero is off screen.
-- Foreground grid uses CSS animation on `opacity` only. Delays are seeded, so server and client render the same.
-- `prefers-reduced-motion`: both grids are static. No blinking, no hover transitions.
-- Everything below the hero keeps MOTION 2: rise on load, score bar fill, chip hover shift.
+- Transitions on `background-color` and `color` only. No canvas, no endless animation anywhere on the landing.
+- `prefers-reduced-motion`: the lit tiles appear at once, with no sequence.
+- Everything else keeps MOTION 2: rise on load for the hero headline, hover and selection on board tiles, the reading guide dimming (opacity 0.2s), score bar fill.
 
 Check workspace (`/check`, `/dashboard/check`), one exception, purpose written down:
 
@@ -89,7 +96,7 @@ A work area, so it stays calm: no grid, no canvas, no blinking. Same tokens, sam
 
 - Every nav item has an icon plus a label. Icons are drawn in-house (`features/dashboard/components/icons.tsx`) on a 24px grid, one 1.75px stroke, square geometry with 3px corners, shown at 20px. No icon library, so they do not look like every other app. Add a name to `NavIconName` and a drawing when a page is added.
 - The current page is marked three ways: a framed box, an accent icon, and heavier text. Color is never the only cue, and the marker survives the icon rail.
-- Desktop sidebar collapses to a 4.5rem icon rail with a real toggle (`aria-expanded`). Labels stay in the DOM as `sr-only` text and as `title`, so every icon has a name. The choice lives in the `brakebit_sidebar` cookie (`collapsed` or `expanded`, nothing private), read in `dashboard/layout.tsx`, so the first paint has the right width. The mobile drawer never collapses.
+- Desktop sidebar collapses to a 4.5rem icon rail. The toggle is the hamburger at the left of the header (`aria-expanded`), not a button inside the sidebar. On small screens the same hamburger opens the drawer. Do not style it with `.btn`: that class sets `display` outside any Tailwind layer, so `md:hidden` would lose. The sidebar brand row is `h-14` like the header, so the two bottom borders form one line. Labels stay in the DOM as `sr-only` text and as `title`, so every icon has a name. The choice lives in the `brakebit_sidebar` cookie (`collapsed` or `expanded`, nothing private), read in `dashboard/layout.tsx`, so the first paint has the right width. The mobile drawer never collapses.
 - Brand mark: four squares, one cyan, next to the wordmark. It echoes the landing grid.
 - Pages that do not exist yet (for example top-up) are not listed. No dead or "soon" items.
 - Sidebar and header render at once. While the session loads, only the content area shows a skeleton and the account button shows a same-size placeholder, so nothing shifts.
@@ -100,12 +107,14 @@ A work area, so it stays calm: no grid, no canvas, no blinking. Same tokens, sam
 
 ## Atmosphere rules
 
-- The square grid and the signal grid live in the hero only. Sections below stay flat and static.
-- The square is the one motif below the hero: a numbered square (`sq-index`, 3px radius, cyan border and tint) with no motion. Accent squares 01 to 06 always mean the six signals (hero grid, report rows, signals list, check empty state). Source of truth: `SIGNALS` in `shared/content/product.ts`; the number is the position in that list and maps to the API key. Workflow steps use the neutral variant (`sq-index--plain`) so the two numbering systems never read as the same thing.
+- Squares are the one motif, at two scales: the large tiles (hero strip, board, `4/6` tile, panel) and the small numbered `sq-index` square (3px radius, cyan border and tint) used in reports and lists. Tiles never blink. They change only on hover, selection, and the hero's mint-ready state.
+- One filled cyan block per section is the focal point (Product tile, Signals panel), never two touching. Report and CTA have none; Report's focal point is the dark score face. Do not use a full-width accent band for a section (owner feedback, 25 Nov 2026). Text on it uses `--bg` with no opacity, so contrast stays at the accent/bg ratio (5.59:1 light, 11.44:1 dark).
+- No section is forced dark. Only the report score face (`.instrument-face`) is dark in both themes.
+- Accent squares 01 to 06 always mean the six signals (hero strip, report rows, signals board, check empty state). Source of truth: `SIGNALS` in `shared/content/product.ts`; the number is the position in that list and maps to the API key. Neutral squares (`sq-index--plain`) are for any other numbering, so the two never read as the same thing.
 - Section labels are sentence case, accent color, no uppercase and no wide tracking.
-- The grid is not live data. The hero says so next to the grid.
-- Grid colors come from CSS variables so light and dark both work.
-- Accent used sparingly: lit squares, step numbers, section labels, secondary hover
+- The strip is not live data. The line under it says what is read today and what shows Unknown.
+- Sheet, tile, and band colors come from CSS variables so light and dark both work.
+- Accent used sparingly: numerals, lit squares, the focal tile, secondary hover
 - No glow, no gradient washes, no blurred orbs
 
 ## Do not

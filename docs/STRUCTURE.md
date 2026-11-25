@@ -70,9 +70,10 @@ apps/web/
     │   │   │                icons.tsx (in-house icon set + BrandMark)
     │   │   ├── sidebar-cookie.ts  `brakebit_sidebar` cookie: collapsed or expanded
     │   │   └── nav.ts       Sidebar items (label, href, icon name) and page titles (add a feature here)
-    │   ├── landing/         Landing hero visuals (see DESIGN.md, Motion)
-    │   │   └── components/  GridBackdrop (canvas, random blink), SignalGrid (4 numbered signal cells).
-    │   │                    Below the hero: `sq-index` numbered squares in globals.css (static)
+│   ├── landing/         Landing client components (see DESIGN.md, Layout and Motion)
+│   │   └── components/  LandingHero (mint field + strip of six squares that light when a mint is ready),
+│   │                    SignalBoard (six tiles + one filled detail panel).
+│   │                    Sheet and tile styles (`.sheet`, `.cell`, `.focal`, `.spec-*`, `.sb-*`) live in globals.css
     │   └── token-check/     Token review feature slice
     │       ├── components/  TokenCheckForm (shared core), GuestCheck, GuestLimitDialog,
     │       │                MemberCheck, ResumeCheckDialog, RiskReportView, ReportSkeleton, RecentChecks

@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { DASHBOARD_NAV, isNavItemActive } from "../nav";
-import { BrandMark, CollapseIcon, NavIcon } from "./icons";
+import { BrandMark, NavIcon } from "./icons";
 
 type Props = {
   pathname: string;
   /** Icon rail on desktop. The mobile drawer never collapses. */
   collapsed?: boolean;
-  /** Present only where collapsing makes sense (the desktop sidebar). */
-  onToggleCollapsed?: () => void;
   onNavigate?: () => void;
 };
 
@@ -15,30 +13,39 @@ type Props = {
  * Sidebar content. Used directly on desktop and inside the mobile drawer.
  * The current page is marked by a framed box, an accent icon, and heavier
  * text, so the marker survives the icon rail and does not rely on color alone.
+ *
+ * The brand row is as tall as the dashboard header (h-14) so the two bottom
+ * borders form one line. Collapsing is done from the header hamburger.
  */
 export function DashboardSidebar({
   pathname,
   collapsed = false,
-  onToggleCollapsed,
   onNavigate,
 }: Props) {
   return (
-    <div
-      className={`flex h-full flex-col gap-6 ${collapsed ? "p-3" : "p-4"}`}
-    >
-      <Link
-        href="/dashboard"
-        onClick={onNavigate}
-        title={collapsed ? "Brakebit" : undefined}
-        className={`flex min-h-11 items-center gap-2.5 rounded-lg text-[15px] font-semibold tracking-[-0.02em] text-[var(--fg)] ${
-          collapsed ? "justify-center" : "px-2"
+    <div className="flex h-full flex-col">
+      <div
+        className={`flex h-14 shrink-0 items-center border-b border-[var(--border)] ${
+          collapsed ? "justify-center px-3" : "px-4"
         }`}
       >
-        <BrandMark />
-        <span className={collapsed ? "sr-only" : undefined}>Brakebit</span>
-      </Link>
+        <Link
+          href="/dashboard"
+          onClick={onNavigate}
+          title={collapsed ? "Brakebit" : undefined}
+          className={`flex min-h-11 items-center gap-2.5 rounded-lg text-[15px] font-semibold tracking-[-0.02em] text-[var(--fg)] ${
+            collapsed ? "justify-center" : "px-2"
+          }`}
+        >
+          <BrandMark />
+          <span className={collapsed ? "sr-only" : undefined}>Brakebit</span>
+        </Link>
+      </div>
 
-      <nav aria-label="Dashboard" className="flex flex-col gap-1">
+      <nav
+        aria-label="Dashboard"
+        className={`flex flex-col gap-1 ${collapsed ? "p-3" : "p-4"}`}
+      >
         {DASHBOARD_NAV.map((item) => {
           const active = isNavItemActive(item, pathname);
           return (
@@ -70,27 +77,6 @@ export function DashboardSidebar({
           );
         })}
       </nav>
-
-      {onToggleCollapsed ? (
-        <div className="mt-auto">
-          <button
-            type="button"
-            onClick={onToggleCollapsed}
-            aria-expanded={!collapsed}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className={`flex min-h-11 w-full items-center gap-3 rounded-lg border border-transparent text-sm text-[var(--muted)] transition-colors hover:text-[var(--fg)] ${
-              collapsed ? "justify-center px-0" : "px-3"
-            }`}
-          >
-            <span className={collapsed ? "rotate-180" : undefined}>
-              <CollapseIcon />
-            </span>
-            <span className={collapsed ? "sr-only" : undefined}>
-              {collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            </span>
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 }

@@ -51,7 +51,7 @@ export function FieldReportPreview() {
         </p>
       </div>
 
-      <div className="instrument-face p-6">
+      <div className="instrument-face p-6" data-part="score">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs text-white/55">Risk score</p>
@@ -59,7 +59,7 @@ export function FieldReportPreview() {
               45
             </p>
           </div>
-          <p className="text-xs text-white/50">Sample</p>
+          <p className="text-xs text-white/60">Sample · 4 of 6 signals read</p>
         </div>
         <p className="mt-4 text-sm font-medium text-[#F0C36A]">Elevated risk</p>
         <div className="score-bar mt-3 max-w-md">
@@ -87,7 +87,7 @@ export function FieldReportPreview() {
         </div>
       </div>
 
-      <div className="border-b border-[var(--border)] px-6 py-4">
+      <div className="border-b border-[var(--border)] px-6 py-4" data-part="strip">
         <SignalStrip
           items={signals.map((signal, index) => ({
             n: index + 1,
@@ -97,7 +97,7 @@ export function FieldReportPreview() {
         />
       </div>
 
-      <div className="p-6">
+      <div className="p-6" data-part="findings">
         <p className="text-sm font-medium text-[var(--fg)]">Findings</p>
         <ul className="mt-4 space-y-4">
           {findings.map((item) => (
@@ -126,7 +126,7 @@ export function FieldReportPreview() {
         </ul>
       </div>
 
-      <div className="border-t border-[var(--border)] p-6">
+      <div className="border-t border-[var(--border)] p-6" data-part="findings">
         <p className="text-sm font-medium text-[var(--fg)]">Signals</p>
         <ul className="mt-3 divide-y divide-[var(--border)]">
           {signals.map((signal, index) => (
@@ -151,7 +151,10 @@ export function FieldReportPreview() {
         </ul>
       </div>
 
-      <footer className="border-t border-[var(--border)] bg-[var(--subtle)] px-6 py-4 text-xs text-[var(--muted)]">
+      <footer
+        className="border-t border-[var(--border)] bg-[var(--subtle)] px-6 py-4 text-xs text-[var(--muted)]"
+        data-part="findings"
+      >
         <p>Sources: solana-rpc · illustrative</p>
         <p className="mt-1">
           Illustrative figures only. Not a live assessment of any token.

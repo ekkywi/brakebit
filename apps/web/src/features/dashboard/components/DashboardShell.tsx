@@ -52,25 +52,21 @@ export function DashboardShell({ children, initialCollapsed = false }: Props) {
       }`}
     >
       <aside className="sticky top-0 hidden h-dvh overflow-y-auto border-r border-[var(--border)] bg-[var(--subtle)] md:block">
-        <DashboardSidebar
-          pathname={pathname}
-          collapsed={collapsed}
-          onToggleCollapsed={toggleCollapsed}
-        />
+        <DashboardSidebar pathname={pathname} collapsed={collapsed} />
       </aside>
 
       {menuOpen ? (
         <MobileNavDrawer onClose={closeMenu}>
-          <div className="pt-14">
-            <DashboardSidebar pathname={pathname} onNavigate={closeMenu} />
-          </div>
+          <DashboardSidebar pathname={pathname} onNavigate={closeMenu} />
         </MobileNavDrawer>
       ) : null}
 
       <div className="flex min-w-0 flex-col">
         <DashboardHeader
           title={dashboardTitle(pathname)}
+          collapsed={collapsed}
           onOpenMenu={() => setMenuOpen(true)}
+          onToggleSidebar={toggleCollapsed}
         />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:px-10 md:py-12">
           {loading ? <DashboardSkeleton /> : children}

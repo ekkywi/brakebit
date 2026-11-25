@@ -5,45 +5,45 @@ export const SAMPLE_CHECK = {
   note: "Example: BONK mint on Solana (illustrative only)",
 } as const;
 
-export const FEATURES = [
+export const SAMPLE_CHECK_HREF = `/check?chain=solana&address=${encodeURIComponent(SAMPLE_CHECK.address)}&example=1`;
+
+/** What a check reads today. Only the four signals the API can return a value for. */
+export const READS = [
   {
-    title: "Findings you can read",
-    detail:
-      "Each reason names what was found, why it matters, and how severe it looks, so you know what to dig into next.",
+    title: "Mint authority",
+    detail: "Whether supply can still change after launch.",
   },
   {
-    title: "Live Solana reads",
-    detail:
-      "Mint authority, freeze authority, and top-holder share come from Solana RPC when the mint allows it.",
+    title: "Freeze authority",
+    detail: "Whether token accounts can be frozen.",
   },
   {
-    title: "Unknown stays unknown",
-    detail:
-      "Liquidity, LP lock, and thin data show as unknown instead of invented confidence. A score is directional, not a safety seal.",
+    title: "Top-holder share",
+    detail: "How much supply the largest account holds, when RPC can index it.",
   },
   {
-    title: "Read-only by design",
-    detail:
-      "Brakebit never asks for keys, never holds assets, and never places a trade. Review first, decide elsewhere.",
+    title: "Token age",
+    detail: "Estimated from the oldest signature in one RPC page.",
   },
 ] as const;
 
-export const STEPS = [
+/** What Brakebit never does. Matches the product scope in ROADMAP.md. */
+export const NEVER = [
   {
-    n: "01",
-    title: "Open a review",
-    detail: "Start from the check workspace. Solana is the network Brakebit reads today.",
+    title: "Ask for a private key or seed phrase",
+    detail: "Signing in, when you choose to, is a signed message and nothing more.",
   },
   {
-    n: "02",
-    title: "Paste the mint address",
-    detail: "Use the token mint, not a wallet. Reviews stay read-only.",
+    title: "Hold your tokens or funds",
+    detail: "Brakebit is not a wallet and never takes custody of assets.",
   },
   {
-    n: "03",
-    title: "Read the assessment",
-    detail:
-      "Score, findings, and signal details land in one report you can verify on Solscan.",
+    title: "Place trades or swaps",
+    detail: "No order routing, no execution. Review here, decide elsewhere.",
+  },
+  {
+    title: "Tell you to buy or sell",
+    detail: "Findings are indicators for your own diligence, not investment advice.",
   },
 ] as const;
 
@@ -51,12 +51,15 @@ export const STEPS = [
  * The six signals every report carries, in the order the API returns them
  * (`risk-score.ts`). `key` is the API signal key, `field` the row label in the
  * report. The position in this list is the signal number (01 to 06).
+ * `readToday` is false for the two signals with no data source yet; they
+ * always show Unknown (DESIGN.md, Credibility rules).
  */
 export const SIGNALS = [
   {
     key: "mint_authority",
     title: "Supply control",
     field: "Mint authority",
+    readToday: true,
     brief: "Mint powers that can still change supply.",
     detail:
       "Whether new tokens can still be minted or supply can be changed after launch.",
@@ -65,6 +68,7 @@ export const SIGNALS = [
     key: "freeze_authority",
     title: "Transfer restrictions",
     field: "Freeze authority",
+    readToday: true,
     brief: "Freeze authority still active or cleared.",
     detail:
       "Whether accounts can be frozen or otherwise blocked from moving tokens.",
@@ -73,6 +77,7 @@ export const SIGNALS = [
     key: "lp_lock",
     title: "Liquidity posture",
     field: "LP lock/burn",
+    readToday: false,
     brief: "Not measured yet. Shows as unknown.",
     detail:
       "Reserved for lock and pool-depth cues when a trustworthy Solana source exists. Unknown for now.",
@@ -81,6 +86,7 @@ export const SIGNALS = [
     key: "top_holder_pct",
     title: "Holder concentration",
     field: "Top holder %",
+    readToday: true,
     brief: "Top account share of supply when RPC can index it.",
     detail:
       "How much supply sits with the largest accounts, and what that means for dump risk.",
@@ -89,6 +95,7 @@ export const SIGNALS = [
     key: "liquidity_usd",
     title: "Market liquidity",
     field: "Liquidity (USD)",
+    readToday: false,
     brief: "Not read yet. No market data source is connected.",
     detail:
       "Pool liquidity in USD. Brakebit does not connect a market data source yet, so this shows Unknown. Thin books amplify slippage and manipulation risk.",
@@ -97,6 +104,7 @@ export const SIGNALS = [
     key: "age_hours",
     title: "Token age",
     field: "Age (hours)",
+    readToday: true,
     brief: "Shown when the mint's history fits in one RPC page.",
     detail:
       "Estimated from the oldest signature in one RPC page. Mints with a long history show Unknown. Newer tokens have less observable history.",

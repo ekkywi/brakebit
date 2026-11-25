@@ -18,7 +18,7 @@ export function SiteHeader() {
           <Link href="/#features" className="nav-link hidden sm:inline">
             Product
           </Link>
-          <Link href="/#how" className="nav-link hidden sm:inline">
+          <Link href="/#report" className="nav-link hidden sm:inline">
             How it works
           </Link>
           <SignInButton />

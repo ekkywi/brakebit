@@ -60,14 +60,6 @@ export function NavIcon({ name, size }: { name: NavIconName; size?: number }) {
 }
 
 /** Double chevron pointing left. The sidebar toggle flips it when collapsed. */
-export function CollapseIcon({ size }: { size?: number }) {
-  return (
-    <IconBase size={size}>
-      <path d="M13 6l-6 6 6 6M19 6l-6 6 6 6" />
-    </IconBase>
-  );
-}
-
 export function MenuIcon({ size }: { size?: number }) {
   return (
     <IconBase size={size}>

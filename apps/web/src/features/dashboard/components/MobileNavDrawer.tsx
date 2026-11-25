@@ -76,7 +76,7 @@ export function MobileNavDrawer({ onClose, children }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Close navigation menu"
-          className="btn btn-secondary btn-sm absolute right-3 top-3 min-h-11 min-w-11"
+          className="absolute right-3 top-1.5 inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--muted)] transition-colors hover:text-[var(--fg)]"
         >
           <CloseIcon size={16} />
         </button>
