@@ -8,28 +8,18 @@ export const metadata: Metadata = {
 
 function CheckFallback() {
   return (
-    <div className="card p-6">
-      <p className="text-sm text-[var(--muted)]">Loading workspace…</p>
+    <div className="sheet sheet--flush">
+      <p role="status" className="cell py-8 text-sm text-[var(--muted)]">
+        Loading workspace…
+      </p>
     </div>
   );
 }
 
 export default function DashboardCheckPage() {
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-[-0.03em] text-[var(--fg)]">
-          Token check
-        </h1>
-        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
-          Live checks use your credits. Reviewed tokens are listed below, and
-          the report opens beside them on desktop.
-        </p>
-      </header>
-
-      <Suspense fallback={<CheckFallback />}>
-        <MemberCheck />
-      </Suspense>
-    </div>
+    <Suspense fallback={<CheckFallback />}>
+      <MemberCheck />
+    </Suspense>
   );
 }

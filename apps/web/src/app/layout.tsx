@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Brakebit | token risk review",
   description:
-    "Review token risk before you buy across major networks. Supply control, transfer restrictions, liquidity, and holder signals with clear explanations. Risk indicators only, not investment advice.",
+    "Review token risk before you buy across major networks. Mint and freeze authority, LP lock, liquidity, and holder signals with clear explanations. Risk indicators only, not investment advice.",
 };
 
 export default function RootLayout({

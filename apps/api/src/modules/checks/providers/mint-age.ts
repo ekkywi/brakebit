@@ -4,7 +4,14 @@ export type MintAgeLookup = {
   ageHours: number | null;
   source?: string;
   note?: string;
+  /** Fixed, user-facing reason when ageHours is null. */
+  reason?: string;
 };
+
+const NO_HISTORY_REASON = 'No transaction history was found for this mint.';
+const LONG_HISTORY_REASON =
+  'The history is longer than one RPC page, so the exact age is not read yet.';
+const RPC_REASON = 'Mint age could not be read from RPC for this mint.';
 
 /**
  * Estimate mint age from the oldest signature returned for the mint account.
@@ -24,6 +31,7 @@ export async function fetchMintAgeHours(
       return {
         ageHours: null,
         note: 'Mint age unavailable: no signatures for this mint.',
+        reason: NO_HISTORY_REASON,
       };
     }
 
@@ -32,6 +40,7 @@ export async function fetchMintAgeHours(
       return {
         ageHours: null,
         note: 'Mint age unavailable: oldest signature has no blockTime.',
+        reason: RPC_REASON,
       };
     }
 
@@ -40,6 +49,7 @@ export async function fetchMintAgeHours(
       return {
         ageHours: null,
         note: 'Mint age unavailable: mint has a long history (RPC page full). Exact first tx needs deeper pagination.',
+        reason: LONG_HISTORY_REASON,
       };
     }
 
@@ -48,6 +58,7 @@ export async function fetchMintAgeHours(
       return {
         ageHours: null,
         note: 'Mint age unavailable: oldest signature has invalid blockTime.',
+        reason: RPC_REASON,
       };
     }
 
@@ -64,6 +75,7 @@ export async function fetchMintAgeHours(
       note: `Mint age unavailable: ${
         error instanceof Error ? error.message : String(error)
       }`,
+      reason: RPC_REASON,
     };
   }
 }

@@ -202,6 +202,22 @@ a {
   }
 }
 
+/*
+ * The same sheet inside the dashboard: it starts at the sidebar edge instead of
+ * centering, and drops the side rules that would double the sidebar's own border.
+ * A right rule appears only when the window is wide enough to leave room beside it.
+ */
+.sheet--flush {
+  margin-inline: 0;
+  border-inline: 0;
+}
+
+@media (min-width: 95rem) {
+  .sheet--flush {
+    border-inline-end: 1px solid var(--border);
+  }
+}
+
 /* Same inline padding as .wrap, so sheet content lines up with the header. */
 .cell {
   padding-inline: 1.5rem;
@@ -236,13 +252,21 @@ a {
   background: var(--border);
 }
 
-@media (min-width: 640px) {
+/*
+ * The strip reflows by its own width, not the window's. Inside the dashboard the
+ * sidebar takes 15rem, so a window breakpoint would give six cramped tiles.
+ */
+.spec-wrap {
+  container-type: inline-size;
+}
+
+@container (min-width: 40rem) {
   .spec-strip {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1024px) {
+@container (min-width: 64rem) {
   .spec-strip {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -665,74 +689,13 @@ a.nav-link:hover {
   border: 0;
 }
 
-.screener-toolbar {
-  padding: 0.85rem 1rem;
-}
-
-.screener-toolbar-grid {
-  display: grid;
-  gap: 0.65rem;
-  align-items: center;
-}
-
-.screener-network {
-  grid-column: 1 / -1;
-}
-
-.screener-toolbar-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-@media (min-width: 768px) {
-  .screener-toolbar-grid {
-    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.2fr) auto;
-  }
-
-  .screener-network {
-    grid-column: auto;
-  }
-}
-
-.screener-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.screener-body--split {
-  align-items: start;
-}
-
-.screener-main {
-  min-width: 0;
-}
-
-.screener-panel {
-  min-width: 0;
-  width: 100%;
-}
-
-@media (min-width: 1024px) {
-  .screener-body--split {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
-    gap: 1rem;
-    align-items: start;
-  }
-
-  .screener-panel {
-    position: sticky;
-    top: 5.5rem;
-    max-height: calc(100vh - 6.5rem);
-    overflow: auto;
-  }
-}
-
+/*
+ * The reviewed-token table reflows by the width of its own column, not the
+ * window's. Beside a report, or inside the dashboard, that column is narrower
+ * than the viewport suggests.
+ */
 .screener-table-scroll {
+  container-type: inline-size;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -847,15 +810,7 @@ a.nav-link:hover {
   padding-inline: var(--cell-x) !important;
 }
 
-@media (max-width: 639px) {
-  /* The last visible column on phones is the score. */
-  .screener-table--sheet th:nth-child(2),
-  .screener-table--sheet .screener-row td:nth-child(2) {
-    padding-right: var(--cell-x);
-  }
-}
-
-@media (max-width: 639px) {
+@container (max-width: 39.99rem) {
   .screener-col-level,
   .screener-col-checked,
   .screener-col-mint {
@@ -864,6 +819,12 @@ a.nav-link:hover {
 
   .screener-table {
     min-width: 0;
+  }
+
+  /* With the other columns hidden, the last visible column is the score. */
+  .screener-table--sheet th:nth-child(2),
+  .screener-table--sheet .screener-row td:nth-child(2) {
+    padding-right: var(--cell-x);
   }
 }
 

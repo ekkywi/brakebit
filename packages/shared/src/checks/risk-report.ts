@@ -14,6 +14,8 @@ export interface RiskSignal {
   label: string;
   value: string | number | boolean | null;
   status: "ok" | "warn" | "bad" | "unknown";
+  /** Short plain reason when status is unknown. Fixed text, never a raw error message. */
+  reason?: string;
 }
 
 export interface TokenIdentity {

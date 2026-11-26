@@ -115,6 +115,19 @@ export function MintField({ check, showLabel = false }: FieldProps) {
   );
 }
 
+/** Fills the BONK mint so a visitor can see a report without hunting for an address. */
+export function SampleButton({ check }: { check: TokenCheck }) {
+  return (
+    <button
+      type="button"
+      onClick={check.loadSample}
+      className="inline-flex min-h-11 items-center text-sm font-medium text-[var(--fg)] underline decoration-[var(--border)] underline-offset-4 transition-colors hover:text-[var(--accent)] hover:decoration-[var(--accent)]"
+    >
+      Try the BONK example
+    </button>
+  );
+}
+
 /** Search status, validation, the selected token, or the hint, in that order. */
 export function FieldMessages({ check }: { check: TokenCheck }) {
   return (

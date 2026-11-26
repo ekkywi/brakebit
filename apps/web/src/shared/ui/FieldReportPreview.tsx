@@ -30,12 +30,18 @@ export function FieldReportPreview() {
     label: string;
     value: string;
     status: SignalStatus;
+    reason?: string;
   }> = [
     { label: "Mint authority", value: "Active", status: "bad" },
     { label: "Freeze authority", value: "Clear", status: "ok" },
-    { label: "LP lock/burn", value: "Unknown", status: "unknown" },
+    {
+      label: "LP lock/burn",
+      value: "Unknown",
+      status: "unknown",
+      reason: "A pool shows a partial locked share that is not verified yet.",
+    },
     { label: "Top holder %", value: "24%", status: "warn" },
-    { label: "Liquidity (USD)", value: "Unknown", status: "unknown" },
+    { label: "Liquidity (USD)", value: "$763K", status: "ok" },
     { label: "Age (hours)", value: "5400", status: "ok" },
   ];
 
@@ -59,7 +65,7 @@ export function FieldReportPreview() {
               45
             </p>
           </div>
-          <p className="text-xs text-white/60">Sample · 4 of 6 signals read</p>
+          <p className="text-xs text-white/60">Sample · 5 of 6 signals read</p>
         </div>
         <p className="mt-4 text-sm font-medium text-[#F0C36A]">Elevated risk</p>
         <div className="score-bar mt-3 max-w-md">
@@ -80,7 +86,7 @@ export function FieldReportPreview() {
               Bonk
               <span className="ml-2 font-normal text-white/55">BONK</span>
             </p>
-            <p className="font-mono-ui mt-1 break-all text-xs text-white/45">
+            <p className="font-mono-ui mt-1 break-all text-xs text-white/55">
               Solana · DezXAZ…B263
             </p>
           </div>
@@ -134,11 +140,18 @@ export function FieldReportPreview() {
               key={signal.label}
               className="flex items-center justify-between gap-4 py-3"
             >
-              <span className="flex items-center gap-3 text-sm text-[var(--ink-soft)]">
+              <span className="flex items-start gap-3 text-sm text-[var(--ink-soft)]">
                 <span className="sq-index sq-index--sm">
                   {signalLabel(index + 1)}
                 </span>
-                {signal.label}
+                <span className="min-w-0">
+                  <span className="block">{signal.label}</span>
+                  {signal.reason ? (
+                    <span className="mt-1 block text-xs leading-relaxed text-[var(--muted)]">
+                      {signal.reason}
+                    </span>
+                  ) : null}
+                </span>
               </span>
               <span
                 className="font-mono-ui text-sm"

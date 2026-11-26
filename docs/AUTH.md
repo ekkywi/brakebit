@@ -164,6 +164,8 @@ Ledger `type` values (small on purpose): `promo_grant`, `purchase`, `spend`, `re
 
 ### Phase B2 — Admin campaign dashboard (after Phase B core)
 
+> **Ditunda (26 Nov 2026, keputusan pemilik):** fase B2 dan C ditunda. Pekerjaan berikutnya adalah perbaikan UI. Mulai lagi hanya jika pemilik memintanya.
+
 1. Admin role enforced **server-side** (e.g. wallet allowlist in env or `User.role`), with a guard separate from normal login.
 2. Admin API + UI to create, edit, and deactivate campaigns (credits, claim window, expiry rule, quota, code).
 3. Every admin action is audit-logged (who, when, what changed).
@@ -171,6 +173,8 @@ Ledger `type` values (small on purpose): `promo_grant`, `purchase`, `spend`, `re
 5. Editing a campaign never rewrites lots already granted (see rule 1 above).
 
 ### Phase C — Crypto top-up
+
+> **Ditunda (26 Nov 2026, keputusan pemilik):** lihat catatan di Phase B2.
 
 1. `Payment` / `CryptoPaymentIntent`: pack size, amount, destination or Solana Pay reference, expiry, status.
 2. Asset: **USDC on Solana** first (SOL quotes optional later; short-lived quote if used).
@@ -218,7 +222,7 @@ Reject verify when: wrong domain in message, reused nonce, expired nonce, bad si
 ## Handoff checklist for the next agent / machine
 
 1. Read [`AUTH.md`](./AUTH.md) (this file), [`ROADMAP.md`](./ROADMAP.md), [`STRUCTURE.md`](./STRUCTURE.md), [`DESIGN.md`](./DESIGN.md) for any UI.
-2. Phase A is done. Phase B Langkah 1–6 are done in code. The Langkah 6 main flow was tested manually by the owner. Next is **Phase B2 / admin guard** or manual web tests, as the user decides. Pending manual tests: Phantom sign-in (Phase A), welcome claim (Phase B Langkah 3), signed-in check that spends a credit, and the landing, check, and dashboard redesign in the browser. Track them in [`continue-prompt.md`](./continue-prompt.md). Product decisions (guest quota, welcome 10 credits / 7 days, two-bucket balance UI, balance lives on `/dashboard` not in the header) are agreed; see "Product decisions for Phase B".
+2. Phase A is done. Phase B Langkah 1–6 are done in code. The Langkah 6 main flow was tested manually by the owner. Next is **UI work** (decided 26 Nov 2026). Phase B2 and Phase C are postponed until the owner asks for them. Manual web tests stay pending. Pending manual tests: Phantom sign-in (Phase A), welcome claim (Phase B Langkah 3), signed-in check that spends a credit, and the landing, check, and dashboard redesign in the browser. Track them in [`continue-prompt.md`](./continue-prompt.md). Product decisions (guest quota, welcome 10 credits / 7 days, two-bucket balance UI, balance lives on `/dashboard` not in the header) are agreed; see "Product decisions for Phase B".
 3. Do not invent trading, custody, or multi-chain payment stubs.
 4. After shipping a phase: update the status table above and the matching ROADMAP rows.
 5. Security: follow the Phase A checklist; do not weaken nonce/session rules for convenience.

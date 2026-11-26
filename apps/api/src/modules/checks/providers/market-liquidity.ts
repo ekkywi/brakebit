@@ -7,7 +7,13 @@ export type MarketLiquidityLookup = {
   liquidityUsd: number | null;
   source?: string;
   note?: string;
+  /** Fixed, user-facing reason when liquidityUsd is null. */
+  reason?: string;
 };
+
+const NO_POOL_REASON =
+  'No Solana pool with a liquidity value is listed on DexScreener for this mint.';
+const SOURCE_REASON = 'DexScreener did not return pool data for this mint.';
 
 /**
  * Total USD liquidity across Solana pools. null when no pool reports a value.
@@ -38,6 +44,7 @@ export async function fetchMarketLiquidityUsd(
       return {
         liquidityUsd: null,
         note: `Liquidity source (dexscreener) HTTP ${res.status}.`,
+        reason: SOURCE_REASON,
       };
     }
 
@@ -47,6 +54,7 @@ export async function fetchMarketLiquidityUsd(
       return {
         liquidityUsd: null,
         note: 'Liquidity unavailable: no Solana pool with a value for this mint.',
+        reason: NO_POOL_REASON,
       };
     }
     return { liquidityUsd, source: 'dexscreener.com:pairs' };
@@ -56,6 +64,7 @@ export async function fetchMarketLiquidityUsd(
       note: `Liquidity source (dexscreener) failed: ${
         error instanceof Error ? error.message : String(error)
       }`,
+      reason: SOURCE_REASON,
     };
   }
 }

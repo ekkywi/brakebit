@@ -68,7 +68,7 @@ export function DashboardShell({ children, initialCollapsed = false }: Props) {
           onOpenMenu={() => setMenuOpen(true)}
           onToggleSidebar={toggleCollapsed}
         />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:px-10 md:py-12">
+        <main className="min-w-0 flex-1">
           {loading ? <DashboardSkeleton /> : children}
         </main>
       </div>

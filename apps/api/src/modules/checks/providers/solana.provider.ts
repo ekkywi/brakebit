@@ -30,8 +30,13 @@ export type SolanaProviderResult = {
   input: ScoreInput;
   sources: string[];
   notes: string[];
+  /** Fixed reason per signal key, for signals that have no value. */
+  signalReasons: Partial<Record<string, string>>;
   token: TokenMetadataLookup;
 };
+
+const HOLDER_REASON =
+  'Holder data is not available from RPC or the holder indexers for this mint.';
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -262,6 +267,14 @@ export class SolanaTokenProvider {
       // keep default label
     }
 
+    const signalReasons: Partial<Record<string, string>> = {};
+    if (holders.pct == null) signalReasons.top_holder_pct = HOLDER_REASON;
+    if (market.liquidityUsd == null && market.reason) {
+      signalReasons.liquidity_usd = market.reason;
+    }
+    if (lp.locked == null && lp.reason) signalReasons.lp_lock = lp.reason;
+    if (age.ageHours == null && age.reason) signalReasons.age_hours = age.reason;
+
     const sources = [`solana-rpc:${rpcHost}`];
     if (holders.source) sources.push(holders.source);
     if (token.source) sources.push(token.source);
@@ -269,6 +282,6 @@ export class SolanaTokenProvider {
     if (market.source) sources.push(market.source);
     if (lp.source) sources.push(lp.source);
 
-    return { input, sources, notes, token };
+    return { input, sources, notes, signalReasons, token };
   }
 }

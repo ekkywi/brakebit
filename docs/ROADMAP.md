@@ -78,7 +78,7 @@ Priorities are intentional. Finish each band before inventing adjacent product s
 1. Rate limiting on `POST /checks` — **done**
 2. Token name/symbol search — **done**
 3. Global recently-reviewed mints UI (unique by address from Neon) — **done**; optional auth for per-user history still open
-4. Pay-as-you-go credits (crypto top-up preferred) — see [`AUTH.md`](./AUTH.md); **Phase A done**; Phase B Langkah 1–6 done in code (campaigns, expiring lots, ledger, welcome 10 credits / 7 days, guest 1 free check/day, credit gate, `/dashboard` balance); record the signed-in check test, then admin campaign dashboard (Phase B2), then USDC top-up
+4. Pay-as-you-go credits (crypto top-up preferred) — see [`AUTH.md`](./AUTH.md); **Phase A done**; Phase B Langkah 1–6 done in code (campaigns, expiring lots, ledger, welcome 10 credits / 7 days, guest 1 free check/day, credit gate, `/dashboard` balance); record the signed-in check test, then admin campaign dashboard (Phase B2), then USDC top-up. **Decided 26 Nov 2026: B2 and C are postponed; UI work comes first.**
 5. Stronger address validation / dead-mint messaging
 6. Basic observability (request id, provider latency, failure reasons)
 7. Optional force-refresh to bypass check cache (e.g. `?fresh=1` / UI control)

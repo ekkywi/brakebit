@@ -2,18 +2,22 @@
 
 import { useState } from "react";
 import type { ApiError } from "@/shared/api/client";
+import { SheetTitle } from "@/shared/ui/SheetTitle";
 import { SpecStrip } from "@/shared/ui/SpecStrip";
 import { useTokenCheck } from "../hooks/use-token-check";
-import { FieldMessages, MintField, SearchField } from "./CheckFields";
+import {
+  FieldMessages,
+  MintField,
+  SampleButton,
+  SearchField,
+} from "./CheckFields";
+import { CheckResults } from "./CheckResults";
 import { GuestLimitDialog } from "./GuestLimitDialog";
-import { RecentChecks } from "./RecentChecks";
-import { ReportPanel } from "./ReportPanel";
 
 /**
  * Check workspace for visitors without an account: one free live check per day.
- * It is laid out as the landing is, one spec sheet split by hairlines, so a
- * visitor sees the same product they were sold. The member workspace
- * (`MemberCheck`) is deliberately a different screen: an app work area.
+ * It is one spec sheet split by hairlines, the same sheet `MemberCheck` uses
+ * inside the dashboard, so a visitor sees the product they will be using.
  */
 export function GuestCheck() {
   const [limitMint, setLimitMint] = useState<string | null>(null);
@@ -29,26 +33,11 @@ export function GuestCheck() {
   return (
     <>
       <div className="sheet">
-        <div className="cell anim-rise grid gap-6 pb-8 pt-10 md:grid-cols-12 md:items-end md:pb-10 md:pt-14">
-          <div className="md:col-span-8">
-            <p className="font-mono-ui text-xs text-[var(--muted)]">
-              Solana · read-only · never asks for keys
-            </p>
-            <h1
-              aria-label="Review a mint."
-              className="mt-5 text-[clamp(2.5rem,7vw,5.5rem)] font-semibold leading-[0.95] tracking-[-0.055em] text-[var(--fg)]"
-            >
-              <span aria-hidden>
-                Review a mint
-                <span className="stop" />
-              </span>
-            </h1>
-          </div>
-          <p className="max-w-md text-[15px] leading-relaxed text-[var(--muted)] md:col-span-4">
-            Search by name or paste a mint. Reviewed tokens are listed below,
-            and the report opens beside them on desktop.
-          </p>
-        </div>
+        <SheetTitle
+          meta="Solana · read-only · never asks for keys"
+          title="Review a mint"
+          note="Search by name or paste a mint. Reviewed tokens are listed below, and the report opens beside them on desktop."
+        />
 
         <form
           onSubmit={check.submit}
@@ -67,13 +56,7 @@ export function GuestCheck() {
               >
                 {check.loading ? "Checking…" : "Review this mint"}
               </button>
-              <button
-                type="button"
-                onClick={check.loadSample}
-                className="inline-flex min-h-11 items-center text-sm font-medium text-[var(--fg)] underline decoration-[var(--border)] underline-offset-4 transition-colors hover:text-[var(--accent)] hover:decoration-[var(--accent)]"
-              >
-                Try the BONK example
-              </button>
+              <SampleButton check={check} />
             </div>
             <div className="mt-4">
               <FieldMessages check={check} />
@@ -104,35 +87,7 @@ export function GuestCheck() {
 
         {check.showPanel ? null : <SpecStrip ready={check.ready} />}
 
-        {/* The list keeps its place when the report opens beside it, so it is not reloaded. */}
-        <div
-          className={
-            check.showPanel
-              ? "grid border-t border-[var(--border)] lg:grid-cols-12"
-              : "border-t border-[var(--border)]"
-          }
-        >
-          <div
-            className={
-              check.showPanel
-                ? "min-w-0 lg:col-span-7 lg:border-r lg:border-[var(--border)]"
-                : "min-w-0"
-            }
-          >
-            <RecentChecks
-              variant="sheet"
-              onSelect={check.pickRecent}
-              refreshToken={check.recentRefresh}
-              selectedAddress={check.address}
-            />
-          </div>
-          {check.showPanel ? (
-            <ReportPanel
-              check={check}
-              className="cell min-w-0 border-t border-[var(--border)] py-6 lg:sticky lg:top-20 lg:col-span-5 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-auto lg:border-t-0"
-            />
-          ) : null}
-        </div>
+        <CheckResults check={check} where="page" />
       </div>
 
       {limitMint ? (

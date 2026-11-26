@@ -18,11 +18,11 @@ export const READS = [
     detail: "Whether token accounts can be frozen.",
   },
   {
-    title: "Top-holder share",
+    title: "Top holder %",
     detail: "How much supply the largest account holds, when RPC can index it.",
   },
   {
-    title: "Token age",
+    title: "Age (hours)",
     detail: "Estimated from the oldest signature in one RPC page.",
   },
 ] as const;
@@ -57,7 +57,7 @@ export const NEVER = [
 export const SIGNALS = [
   {
     key: "mint_authority",
-    title: "Supply control",
+    title: "Mint authority",
     field: "Mint authority",
     readToday: true,
     brief: "Mint powers that can still change supply.",
@@ -66,7 +66,7 @@ export const SIGNALS = [
   },
   {
     key: "freeze_authority",
-    title: "Transfer restrictions",
+    title: "Freeze authority",
     field: "Freeze authority",
     readToday: true,
     brief: "Freeze authority still active or cleared.",
@@ -75,7 +75,7 @@ export const SIGNALS = [
   },
   {
     key: "lp_lock",
-    title: "Liquidity posture",
+    title: "LP lock/burn",
     field: "LP lock/burn",
     readToday: true,
     brief: "Share of LP tokens locked or burned.",
@@ -84,7 +84,7 @@ export const SIGNALS = [
   },
   {
     key: "top_holder_pct",
-    title: "Holder concentration",
+    title: "Top holder %",
     field: "Top holder %",
     readToday: true,
     brief: "Top account share of supply when RPC can index it.",
@@ -93,7 +93,7 @@ export const SIGNALS = [
   },
   {
     key: "liquidity_usd",
-    title: "Market liquidity",
+    title: "Liquidity (USD)",
     field: "Liquidity (USD)",
     readToday: true,
     brief: "Total USD liquidity across Solana pools.",
@@ -102,7 +102,7 @@ export const SIGNALS = [
   },
   {
     key: "age_hours",
-    title: "Token age",
+    title: "Age (hours)",
     field: "Age (hours)",
     readToday: true,
     brief: "Shown when the mint's history fits in one RPC page.",
@@ -123,6 +123,3 @@ export function signalNumber(key: string): number | null {
 export function signalLabel(n: number): string {
   return String(n).padStart(2, "0");
 }
-
-export const CHECK_TIP =
-  "Use the mint (not a wallet), then verify findings on Solscan.";

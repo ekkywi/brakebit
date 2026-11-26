@@ -20,7 +20,7 @@ type Props = {
 export function SpecStrip({ ready }: Props) {
   return (
     <>
-      <div className="border-t border-[var(--border)]">
+      <div className="spec-wrap border-t border-[var(--border)]">
         <ol aria-label="The six signals a report covers" className="spec-strip">
           {SIGNALS.map((signal, index) => (
             <li

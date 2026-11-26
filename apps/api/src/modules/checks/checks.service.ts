@@ -62,20 +62,25 @@ export class ChecksService {
             }
         }
 
-        let input, sources, notes, token;
+        let input, sources, signalReasons, token;
         try {
-            ({ input, sources, notes, token } = await this.solanaProvider.fetchScoreInput(dto.address));
+            ({ input, sources, signalReasons, token } = await this.solanaProvider.fetchScoreInput(dto.address));
         } catch (error) {
             if (gated) await this.refundAllowance(caller, refId);
             throw error;
         }
 
         const scored = computeRiskScore(input);
+        const signals = scored.signals.map((signal) => {
+            const reason = signalReasons[signal.key];
+            return signal.status === 'unknown' && reason ? { ...signal, reason } : signal;
+        });
 
         const baseFreshness =
             'Mint authority, freeze authority, top-holder share, mint age (when history is short enough), and display metadata are read from Solana RPC / DAS when available. Liquidity comes from DexScreener pools; LP lock comes from Rugcheck, weighted by USD. Either can be Unknown when its source has no data for the mint.';
-        const freshnessNote =
-            notes.length > 0 ? `${baseFreshness} ${notes.join(' ')}` : baseFreshness;
+        // Provider notes can carry raw error text (an RPC URL with an API key), so
+        // they are never shown. Unknown reasons come from fixed copy in signalReasons.
+        const freshnessNote = baseFreshness;
 
         const report: RiskReport = {
             address: dto.address,
@@ -84,7 +89,7 @@ export class ChecksService {
             level: scored.level,
             summary: scored.summary,
             reasons: scored.reasons,
-            signals: scored.signals,
+            signals,
             sources,
             checkedAt: new Date().toISOString(),
             freshnessNote,

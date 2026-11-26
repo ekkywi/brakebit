@@ -3,17 +3,18 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCreditBalance } from "@/features/credits/use-credit-balance";
-import {
-  CHECK_TIP,
-  SIGNALS,
-  signalLabel,
-} from "@/shared/content/product";
+import { SheetTitle } from "@/shared/ui/SheetTitle";
+import { SpecStrip } from "@/shared/ui/SpecStrip";
 import { useTokenCheck } from "../hooks/use-token-check";
 import { takePendingCheck } from "../lib/pending-check";
-import { FieldMessages, MintField, SearchField } from "./CheckFields";
-import { CreditRail } from "./CreditRail";
-import { RecentChecks } from "./RecentChecks";
-import { ReportPanel } from "./ReportPanel";
+import {
+  FieldMessages,
+  MintField,
+  SampleButton,
+  SearchField,
+} from "./CheckFields";
+import { CheckResults } from "./CheckResults";
+import { CreditCell } from "./CreditCell";
 import { ResumeCheckDialog } from "./ResumeCheckDialog";
 
 function creditsAction(code: string | null) {
@@ -29,10 +30,10 @@ function creditsAction(code: string | null) {
 }
 
 /**
- * Check workspace for signed-in users: an app work area inside the dashboard
- * shell. It leads with what can be spent, then a compact toolbar and a table.
- * The public workspace (`GuestCheck`) is a spec sheet on purpose, so the two
- * screens read as different places. Live checks spend credits.
+ * Check workspace for signed-in users, inside the dashboard shell. It is the
+ * same spec sheet as `GuestCheck`: title row, form with a numeral cell, tiles,
+ * then the reviewed list with the report beside it. The numeral cell shows
+ * credits here instead of the one free check. Live checks spend credits.
  */
 export function MemberCheck() {
   const consumedRef = useRef(false);
@@ -59,48 +60,51 @@ export function MemberCheck() {
 
   return (
     <>
-      <div className="space-y-4">
-        <CreditRail
-          balance={balance}
-          status={status}
-          onRetry={() => void reload()}
+      <div className="sheet sheet--flush">
+        <SheetTitle
+          scale="app"
+          meta="Solana · live check · uses credits"
+          title="Token check"
+          note="Live checks use your credits. Reviewed tokens are listed below, and the report opens beside them on wide screens."
         />
 
-        <form onSubmit={check.submit} className="screener-toolbar card">
-          <div className="screener-toolbar-grid">
-            <p className="screener-network text-xs text-[var(--muted)]">
-              Network <span className="text-[var(--fg)]">Solana</span>
-            </p>
-            <SearchField check={check} />
-            <MintField check={check} />
-            <div className="screener-toolbar-actions">
-              <button
-                type="button"
-                className="nav-link text-xs whitespace-nowrap"
-                onClick={check.loadSample}
-              >
-                Example
-              </button>
+        <form
+          onSubmit={check.submit}
+          className="grid border-t border-[var(--border)] md:grid-cols-12"
+        >
+          <div className="cell py-8 md:col-span-8 md:py-10">
+            <div className="grid gap-5 md:grid-cols-2">
+              <SearchField check={check} showLabel />
+              <MintField check={check} showLabel />
+            </div>
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-1">
               <button
                 type="submit"
                 disabled={check.loading || !check.ready}
-                className="btn btn-primary btn-sm whitespace-nowrap"
+                className="btn btn-primary"
               >
                 {check.loading ? "Checking…" : "Run check"}
               </button>
+              <SampleButton check={check} />
+            </div>
+            <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">
+              A live check uses 1 credit unless the result is already cached.
+            </p>
+            <div className="mt-4">
+              <FieldMessages check={check} />
             </div>
           </div>
-          <div className="mt-2.5">
-            <FieldMessages check={check} />
-          </div>
+
+          <CreditCell
+            balance={balance}
+            status={status}
+            onRetry={() => void reload()}
+            className="md:col-span-4"
+          />
         </form>
 
-        <p className="text-xs leading-relaxed text-[var(--muted)]">
-          A live check uses 1 credit unless the result is already cached.
-        </p>
-
         {check.error ? (
-          <div className="space-y-2">
+          <div className="cell space-y-2 border-t border-[var(--border)] py-4">
             <p role="alert" className="alert-error">
               {check.error}
             </p>
@@ -108,51 +112,9 @@ export function MemberCheck() {
           </div>
         ) : null}
 
-        <div
-          className={
-            check.showPanel
-              ? "screener-body screener-body--split"
-              : "screener-body"
-          }
-        >
-          <div className="screener-main space-y-4">
-            <RecentChecks
-              onSelect={check.pickRecent}
-              refreshToken={check.recentRefresh}
-              selectedAddress={check.address}
-            />
+        {check.showPanel ? null : <SpecStrip ready={check.ready} />}
 
-            {check.showPanel ? null : (
-              <div className="card p-5">
-                <p className="text-sm font-medium text-[var(--fg)]">
-                  What a report covers
-                </p>
-                <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {SIGNALS.map((signal, index) => (
-                    <li key={signal.key} className="flex gap-3">
-                      <span className="sq-index">{signalLabel(index + 1)}</span>
-                      <div className="min-w-0">
-                        <p className="text-sm text-[var(--fg)]">
-                          {signal.title}
-                        </p>
-                        <p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">
-                          {signal.brief}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-5 border-t border-[var(--border)] pt-4 text-xs leading-relaxed text-[var(--muted)]">
-                  {CHECK_TIP}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {check.showPanel ? (
-            <ReportPanel check={check} className="screener-panel" />
-          ) : null}
-        </div>
+        <CheckResults check={check} where="app" />
       </div>
 
       {resumeMint ? (

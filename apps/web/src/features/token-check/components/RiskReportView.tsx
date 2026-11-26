@@ -162,10 +162,10 @@ export function RiskReportView({
                 </span>
               ) : null}
             </p>
-            <p className="font-mono-ui mt-1 break-all text-xs text-white/45">
+            <p className="font-mono-ui mt-1 break-all text-xs text-white/55">
               {chainLabel(report.chain)} · {report.address}
             </p>
-            <p className="mt-1 text-[11px] text-white/40">
+            <p className="mt-1 text-[11px] text-white/55">
               Confirm name and mint match the token you intend to review.
             </p>
           </div>
@@ -240,13 +240,20 @@ export function RiskReportView({
                 key={signal.key}
                 className="flex items-center justify-between gap-4 py-3"
               >
-                <span className="flex min-w-0 items-center gap-3 text-sm text-[var(--ink-soft)]">
+                <span className="flex min-w-0 items-start gap-3 text-sm text-[var(--ink-soft)]">
                   {n !== null ? (
                     <span className="sq-index sq-index--sm">
                       {signalLabel(n)}
                     </span>
                   ) : null}
-                  {signal.label}
+                  <span className="min-w-0">
+                    <span className="block">{signal.label}</span>
+                    {signal.status === "unknown" && signal.reason ? (
+                      <span className="mt-1 block text-xs leading-relaxed text-[var(--muted)]">
+                        {signal.reason}
+                      </span>
+                    ) : null}
+                  </span>
                 </span>
                 <span className="flex items-center gap-3">
                   <span

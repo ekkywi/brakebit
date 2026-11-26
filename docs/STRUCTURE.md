@@ -66,7 +66,7 @@ apps/web/
     │   ├── dashboard/       User app shell: sidebar, header, account menu, mobile drawer
     │   │   ├── components/  DashboardShell (chrome first, content skeleton while session loads),
     │   │   │                DashboardSidebar, DashboardHeader, AccountMenu, MobileNavDrawer,
-    │   │   │                DashboardSkeleton, OverviewView (credit block + six signals),
+    │   │   │                DashboardSkeleton, OverviewView (spec sheet: title row, credit numeral cell, six signals),
     │   │   │                icons.tsx (in-house icon set + BrandMark)
     │   │   ├── sidebar-cookie.ts  `brakebit_sidebar` cookie: collapsed or expanded
     │   │   └── nav.ts       Sidebar items (label, href, icon name) and page titles (add a feature here)
@@ -75,11 +75,11 @@ apps/web/
 │   │                    SignalBoard (six tiles + one filled detail panel).
 │   │                    Sheet and tile styles (`.sheet`, `.cell`, `.focal`, `.spec-*`, `.sb-*`) live in globals.css
     │   └── token-check/     Token review feature slice
-    │       ├── components/  GuestCheck (public spec-sheet layout), GuestLimitDialog,
-    │       │                MemberCheck (member work-area layout), CreditRail, ResumeCheckDialog,
-    │       │                CheckFields (search, mint, messages), ReportPanel, RecentChecks (card | sheet),
-    │       │                RiskReportView, ReportSkeleton
-    │       ├── hooks/       use-token-check (state and actions shared by both layouts)
+    │       ├── components/  GuestCheck (public sheet), GuestLimitDialog,
+    │       │                MemberCheck (same sheet in the dashboard), CreditCell (credit numeral cell), ResumeCheckDialog,
+    │       │                CheckResults (list + report split, shared), CheckFields (search, mint, messages, example),
+    │       │                ReportPanel, RecentChecks, RiskReportView, ReportSkeleton
+    │       ├── hooks/       use-token-check (state and actions shared by both pages)
     │       ├── lib/         Address helpers, explorers, formatters, pending-check (guest → member handoff)
     │       └── api.ts       Client → Nest `/checks`, `/checks/recent`, `/tokens/search`
     └── shared/
@@ -89,7 +89,8 @@ apps/web/
         ├── lib/             Small utilities (e.g. cn)
         ├── theme/           Theme storage key + FOUC script
         └── ui/              SiteHeader, ThemeToggle, FieldReportPreview, Dialog, SignalStrip (six status squares),
-                             SpecStrip (six square tiles; landing hero and public check)
+                             SpecStrip (six square tiles; landing, both check pages, Overview),
+                             SheetTitle (first row of a sheet: meta line, title with square stop, note)
 ```
 
 ## `apps/api`

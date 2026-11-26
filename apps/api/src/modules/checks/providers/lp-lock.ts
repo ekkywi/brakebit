@@ -18,7 +18,36 @@ export type LpLockLookup = {
   locked: boolean | null;
   source?: string;
   note?: string;
+  /** Fixed, user-facing reason when locked is null. */
+  reason?: string;
 };
+
+const NO_LP_POOL_REASON = 'No pool with an LP token was found on Rugcheck.';
+const PARTIAL_SHARE_REASON =
+  'A pool shows a partial locked share that is not verified yet.';
+const NO_USD_REASON = 'Rugcheck has no USD value or locked share for the LP pools.';
+const SOURCE_REASON = 'Rugcheck did not return LP data for this mint.';
+
+function lpTokenPools(markets: RugcheckMarket[]): RugcheckLp[] {
+  return markets
+    .map((m) => m.lp)
+    .filter(
+      (lp): lp is RugcheckLp =>
+        Boolean(lp?.lpMint) && lp?.lpMint !== SYSTEM_PROGRAM_ID,
+    );
+}
+
+function isPartialShare(pct: number | null | undefined): boolean {
+  return typeof pct === 'number' && pct > 0 && pct < 100;
+}
+
+/** Fixed reason for an Unknown LP lock. Checks the cases in the order a reader would ask. */
+export function lpLockUnknownReason(markets: RugcheckMarket[]): string {
+  const pools = lpTokenPools(markets);
+  if (pools.length === 0) return NO_LP_POOL_REASON;
+  if (pools.some((p) => isPartialShare(p.lpLockedPct))) return PARTIAL_SHARE_REASON;
+  return NO_USD_REASON;
+}
 
 /**
  * USD-weighted locked share (0 to 100) across pools that issue an LP token.
@@ -30,12 +59,7 @@ export type LpLockLookup = {
  * LP balances yet, so they stay Unknown until they are verified.
  */
 export function lpLockedSharePct(markets: RugcheckMarket[]): number | null {
-  const pools = markets
-    .map((m) => m.lp)
-    .filter(
-      (lp): lp is RugcheckLp =>
-        Boolean(lp?.lpMint) && lp?.lpMint !== SYSTEM_PROGRAM_ID,
-    );
+  const pools = lpTokenPools(markets);
   if (pools.length === 0) return null;
 
   let weight = 0;
@@ -45,7 +69,7 @@ export function lpLockedSharePct(markets: RugcheckMarket[]): number | null {
     const pct = pool.lpLockedPct;
     if (typeof usd !== 'number' || !Number.isFinite(usd) || usd < 0) return null;
     if (typeof pct !== 'number' || !Number.isFinite(pct)) return null;
-    if (pct > 0 && pct < 100) return null;
+    if (isPartialShare(pct)) return null;
     weight += usd;
     locked += usd * pct;
   }
@@ -67,15 +91,21 @@ export async function fetchLpLockFromRugcheck(mint: string): Promise<LpLockLooku
       signal: AbortSignal.timeout(20_000),
     });
     if (!res.ok) {
-      return { locked: null, note: `LP lock source (rugcheck) HTTP ${res.status}.` };
+      return {
+        locked: null,
+        note: `LP lock source (rugcheck) HTTP ${res.status}.`,
+        reason: SOURCE_REASON,
+      };
     }
 
     const data = (await res.json()) as { markets?: RugcheckMarket[] | null };
-    const locked = lpLockState(data.markets ?? []);
+    const markets = data.markets ?? [];
+    const locked = lpLockState(markets);
     if (locked === null) {
       return {
         locked: null,
         note: 'LP lock unknown: no pool with an LP token and a verified USD-weighted locked share from Rugcheck.',
+        reason: lpLockUnknownReason(markets),
       };
     }
     return { locked, source: 'rugcheck.xyz:markets.lp' };
@@ -85,6 +115,7 @@ export async function fetchLpLockFromRugcheck(mint: string): Promise<LpLockLooku
       note: `LP lock source (rugcheck) failed: ${
         error instanceof Error ? error.message : String(error)
       }`,
+      reason: SOURCE_REASON,
     };
   }
 }

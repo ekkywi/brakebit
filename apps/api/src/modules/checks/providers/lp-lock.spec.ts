@@ -1,4 +1,4 @@
-import { lpLockedSharePct, lpLockState } from './lp-lock';
+import { lpLockedSharePct, lpLockState, lpLockUnknownReason } from './lp-lock';
 
 const LP = 'LpMint1111111111111111111111111111111111111';
 const SYSTEM = '11111111111111111111111111111111';
@@ -43,6 +43,13 @@ describe('lpLockState', () => {
     expect(
       lpLockState([{ lp: { lpMint: LP, lpLockedPct: 100, quoteUSD: null } }]),
     ).toBeNull();
+  });
+
+  it('gives a fixed reason for each unknown case', () => {
+    expect(lpLockUnknownReason([])).toMatch(/No pool with an LP token/);
+    expect(
+      lpLockUnknownReason([{ lp: { lpMint: LP, lpLockedPct: 57.94, quoteUSD: 10 } }]),
+    ).toMatch(/partial locked share/);
   });
 
   it('is null when the total USD weight is zero', () => {
