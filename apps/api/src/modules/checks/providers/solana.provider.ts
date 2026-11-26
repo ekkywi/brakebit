@@ -17,6 +17,8 @@ import {
   fetchTopHolderFromSolscan,
   type TopHolderLookup,
 } from './top-holder-sources';
+import { fetchMarketLiquidityUsd } from './market-liquidity';
+import { fetchLpLockFromRugcheck } from './lp-lock';
 
 function resolveTokenProgram(owner: PublicKey) {
   if (owner.equals(TOKEN_2022_PROGRAM_ID)) return TOKEN_2022_PROGRAM_ID;
@@ -226,9 +228,11 @@ export class SolanaTokenProvider {
 
     await sleep(100);
 
-    const [holders, token] = await Promise.all([
+    const [holders, token, market, lp] = await Promise.all([
       resolveTopHolderPct(connection, address, mintPubkey, mint.supply),
       fetchTokenMetadata(rpcUrl, address),
+      fetchMarketLiquidityUsd(address),
+      fetchLpLockFromRugcheck(address),
     ]);
 
     await sleep(100);
@@ -239,13 +243,15 @@ export class SolanaTokenProvider {
     if (holders.note) notes.push(holders.note);
     if (token.note) notes.push(token.note);
     if (age.note) notes.push(age.note);
+    if (market.note) notes.push(market.note);
+    if (lp.note) notes.push(lp.note);
 
     const input: ScoreInput = {
       mintAuthorityActive,
       freezeAuthorityActive,
-      lpLockedOrBurned: null,
+      lpLockedOrBurned: lp.locked,
       topHolderPct: holders.pct,
-      liquidityUsd: null,
+      liquidityUsd: market.liquidityUsd,
       ageHours: age.ageHours,
     };
 
@@ -260,6 +266,8 @@ export class SolanaTokenProvider {
     if (holders.source) sources.push(holders.source);
     if (token.source) sources.push(token.source);
     if (age.source) sources.push(age.source);
+    if (market.source) sources.push(market.source);
+    if (lp.source) sources.push(lp.source);
 
     return { input, sources, notes, token };
   }

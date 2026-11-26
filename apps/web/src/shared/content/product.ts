@@ -51,8 +51,8 @@ export const NEVER = [
  * The six signals every report carries, in the order the API returns them
  * (`risk-score.ts`). `key` is the API signal key, `field` the row label in the
  * report. The position in this list is the signal number (01 to 06).
- * `readToday` is false for the two signals with no data source yet; they
- * always show Unknown (DESIGN.md, Credibility rules).
+ * `readToday` means the signal has a data source. Any signal can still show
+ * Unknown for a given mint when its source has no data (DESIGN.md, Credibility rules).
  */
 export const SIGNALS = [
   {
@@ -77,10 +77,10 @@ export const SIGNALS = [
     key: "lp_lock",
     title: "Liquidity posture",
     field: "LP lock/burn",
-    readToday: false,
-    brief: "Not measured yet. Shows as unknown.",
+    readToday: true,
+    brief: "Share of LP tokens locked or burned.",
     detail:
-      "Reserved for lock and pool-depth cues when a trustworthy Solana source exists. Unknown for now.",
+      "Read from Rugcheck for pools that issue an LP token, weighted by USD value. Pools without one, such as concentrated-liquidity pools, are not counted. Unknown when no such pool is found.",
   },
   {
     key: "top_holder_pct",
@@ -95,10 +95,10 @@ export const SIGNALS = [
     key: "liquidity_usd",
     title: "Market liquidity",
     field: "Liquidity (USD)",
-    readToday: false,
-    brief: "Not read yet. No market data source is connected.",
+    readToday: true,
+    brief: "Total USD liquidity across Solana pools.",
     detail:
-      "Pool liquidity in USD. Brakebit does not connect a market data source yet, so this shows Unknown. Thin books amplify slippage and manipulation risk.",
+      "Summed from DexScreener's Solana pools for the mint. Thin books amplify slippage and manipulation risk. Unknown when no pool is listed.",
   },
   {
     key: "age_hours",

@@ -53,7 +53,7 @@ Solana only in shared types and UI. Other chains stay off the product surface un
 | Area | Gap |
 |---|---|
 | Mint age | Phase 1 only: full 1000-signature page → age stays unknown (no deep pagination yet) |
-| LP / liquidity | Still `unknown` until a trustworthy source exists |
+| LP / liquidity | Read since 26 Nov 2026: LP lock from Rugcheck (USD-weighted, 95% threshold, LP-token pools only); liquidity from DexScreener (sum of Solana pools). Unknown when the source has no data |
 | Auth / per-user history | Recently reviewed is global (anon); per signed-in user history not built |
 | Auth / credits | Phase A wallet login **done**; Phase B Langkah 1–6 **done** in code (campaign lots, ledger, welcome on login, guest quota, credit gate, `/credits/me`, `/dashboard` with balance and guest modal; owner tested the main flow, signed-in check with credits still to record); admin campaign dashboard and USDC top-up still open — [`AUTH.md`](./AUTH.md) |
 | Observability | No request id / provider latency metrics yet |
@@ -67,7 +67,7 @@ Priorities are intentional. Finish each band before inventing adjacent product s
 ### P0 — Real checks (Solana-first)
 
 1. Live Solana provider (mint / freeze / top holder / age phase 1 / Token-2022 / metadata) — **done**
-2. Deeper mint-age pagination only if needed; keep LP/liquidity unknown until proven
+2. Deeper mint-age pagination only if needed; verify the LP-lock mid-range values against lockers (see DESIGN.md, Credibility rules)
 3. Persist successful checks when `DATABASE_URL` is set; keep soft-fail when it is not — **done**
 4. Short TTL check cache (reuse history, skip RPC/insert) — **done** (default 5m; `CHECK_CACHE_TTL_MS`)
 5. Honest empty/error states when a signal source is unavailable — **mostly in place**
@@ -107,7 +107,7 @@ Priorities are intentional. Finish each band before inventing adjacent product s
 ## Working agreements
 
 - Risk copy stays factual; never invent partners, audits, or TVL.
-- Unknown stays unknown — do not fill LP/liquidity/age with guesses.
+- Unknown stays unknown — do not fill LP/liquidity/age with guesses. A missing pool or a missing locked share is Unknown, never 0.
 - UI direction: [`DESIGN.md`](./DESIGN.md). Folder intent: [`STRUCTURE.md`](./STRUCTURE.md). Auth/credits plan: [`AUTH.md`](./AUTH.md).
 - New empty folders that must survive clone get a `.gitkeep` and a row in `STRUCTURE.md`.
 - Update this file (and `AUTH.md` status) when a P0/P1 or auth phase ships or scope changes.

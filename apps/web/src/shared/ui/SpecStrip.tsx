@@ -38,7 +38,7 @@ export function SpecStrip({ ready }: Props) {
                     ? "No source yet"
                     : ready
                       ? "Will read"
-                      : "Read today"}
+                      : "Has a source"}
                 </span>
               </span>
             </li>
@@ -51,8 +51,8 @@ export function SpecStrip({ ready }: Props) {
         className="cell border-t border-[var(--border)] py-4 text-sm text-[var(--muted)]"
       >
         {ready
-          ? `Ready: ${READ_COUNT} signals will be read for this mint. LP lock and liquidity show Unknown.`
-          : `${READ_COUNT} of ${SIGNALS.length} signals are read today. LP lock and liquidity show Unknown.`}
+          ? `Ready: ${READ_COUNT} signals have a data source for this mint. Any one can still show Unknown.`
+          : `${READ_COUNT} of ${SIGNALS.length} signals have a data source. Any one can still show Unknown.`}
       </p>
     </>
   );

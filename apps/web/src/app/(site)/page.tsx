@@ -52,8 +52,8 @@ export default function HomePage() {
                 </span>
               </p>
               <p className="text-[15px] leading-relaxed">
-                signals are read today. LP lock and liquidity have no data
-                source yet, so they show Unknown, never clear.
+                signals have a data source. Any one can still show Unknown
+                for a mint, never clear.
               </p>
             </div>
 
@@ -121,8 +121,8 @@ export default function HomePage() {
               Six signals. Unknown stays visible.
             </h2>
             <p className="max-w-md text-[15px] leading-relaxed text-[var(--muted)] md:col-span-5">
-              Every report lists all six. Dashed squares have no data source
-              yet and always read Unknown.
+              Every report lists all six. A signal shows Unknown when its
+              source has no data for that mint. Unknown is never counted as clear.
             </p>
           </div>
           <SignalBoard />

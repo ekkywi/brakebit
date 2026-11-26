@@ -6,8 +6,8 @@ import { SIGNALS, signalLabel } from "@/shared/content/product";
 /**
  * The six signals as a board of squares on shared hairlines. The panel beside
  * it is the section's one filled tile and shows a giant number for the
- * selected signal. Dashed tiles have no data source yet, matching the dashed
- * Unknown square in the report. Static: no blinking below the hero.
+ * selected signal. Dashed tiles mark a signal without a data source (none today),
+ * matching the dashed Unknown square in the report. Static: no blinking below the hero.
  */
 export function SignalBoard() {
   const panelId = useId();
@@ -35,7 +35,7 @@ export function SignalBoard() {
             <span>
               <span className="sb-title">{signal.title}</span>
               <span className="sb-state">
-                {signal.readToday ? "Read today" : "No source yet"}
+                {signal.readToday ? "Has a data source" : "No source yet"}
               </span>
             </span>
           </button>
@@ -63,7 +63,7 @@ export function SignalBoard() {
           <p className="mt-3 text-[15px] leading-relaxed">{current.detail}</p>
           <p className="mt-5 border-t border-[color-mix(in_srgb,var(--bg)_45%,transparent)] pt-4 text-sm leading-relaxed">
             {current.readToday
-              ? "Read from Solana RPC when the mint allows it. If the read fails, the row shows Unknown."
+              ? "Read from its source when the mint allows it. If the source has no data for this mint, the row shows Unknown."
               : "No data source yet, so every report shows Unknown here. Unknown is never counted as clear."}
           </p>
         </div>

@@ -73,7 +73,7 @@ export class ChecksService {
         const scored = computeRiskScore(input);
 
         const baseFreshness =
-            'Mint authority, freeze authority, top-holder share, mint age (when history is short enough), and display metadata are read from Solana RPC / DAS when available. Liquidity and LP lock are not measured yet.';
+            'Mint authority, freeze authority, top-holder share, mint age (when history is short enough), and display metadata are read from Solana RPC / DAS when available. Liquidity comes from DexScreener pools; LP lock comes from Rugcheck, weighted by USD. Either can be Unknown when its source has no data for the mint.';
         const freshnessNote =
             notes.length > 0 ? `${baseFreshness} ${notes.join(' ')}` : baseFreshness;
 
