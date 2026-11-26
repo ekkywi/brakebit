@@ -9,7 +9,6 @@ html[data-theme="light"] {
   --border: #e6e8ec;
   --accent: #0b7285;
   --accent-soft: rgba(11, 114, 133, 0.1);
-  --atmosphere: rgba(11, 114, 133, 0.09);
   --ok: #0b6e4f;
   --warn: #8a6419;
   --bad: #b42318;
@@ -44,7 +43,6 @@ html[data-theme="dark"] {
   --border: #333333;
   --accent: #3dd6f5;
   --accent-soft: rgba(61, 214, 245, 0.12);
-  --atmosphere: rgba(61, 214, 245, 0.07);
   --ok: #3ecf8e;
   --warn: #e2b340;
   --bad: #f07167;
@@ -689,13 +687,6 @@ a.nav-link:hover {
   gap: 0.75rem;
 }
 
-.screener-toolbar-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  margin-top: 0.65rem;
-}
-
 @media (min-width: 768px) {
   .screener-toolbar-grid {
     grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.2fr) auto;
@@ -756,10 +747,8 @@ a.nav-link:hover {
   padding: 0.55rem 0.85rem;
   text-align: left;
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--muted);
   border-bottom: 1px solid var(--border);
   background: var(--subtle);
@@ -821,6 +810,49 @@ a.nav-link:hover {
 .screener-row-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
+}
+
+/*
+ * Sheet variant (public check): the table runs edge to edge between the sheet rules,
+ * and its first and last columns use the same inline padding as .cell, so text lines
+ * up with the rows above it.
+ */
+.screener-table--sheet {
+  --cell-x: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .screener-table--sheet {
+    --cell-x: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .screener-table--sheet {
+    --cell-x: 2.5rem;
+  }
+}
+
+.screener-table--sheet th:first-child,
+.screener-table--sheet .screener-row-btn {
+  padding-left: var(--cell-x);
+}
+
+.screener-table--sheet th:last-child,
+.screener-table--sheet .screener-row td:last-child {
+  padding-right: var(--cell-x);
+}
+
+.screener-table--sheet .screener-table-empty {
+  padding-inline: var(--cell-x) !important;
+}
+
+@media (max-width: 639px) {
+  /* The last visible column on phones is the score. */
+  .screener-table--sheet th:nth-child(2),
+  .screener-table--sheet .screener-row td:nth-child(2) {
+    padding-right: var(--cell-x);
+  }
 }
 
 @media (max-width: 639px) {
@@ -947,22 +979,4 @@ a.nav-link:hover {
 html[data-theme="dark"] .alert-error {
   border-color: color-mix(in srgb, var(--bad) 45%, var(--border));
   background: color-mix(in srgb, var(--bad) 14%, var(--bg));
-}
-
-.check-stage {
-  position: relative;
-}
-
-.check-stage::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 220px;
-  background: radial-gradient(
-    60% 80% at 20% 0%,
-    var(--atmosphere),
-    transparent 70%
-  );
-  pointer-events: none;
-  z-index: -1;
 }

@@ -75,9 +75,11 @@ apps/web/
 │   │                    SignalBoard (six tiles + one filled detail panel).
 │   │                    Sheet and tile styles (`.sheet`, `.cell`, `.focal`, `.spec-*`, `.sb-*`) live in globals.css
     │   └── token-check/     Token review feature slice
-    │       ├── components/  TokenCheckForm (shared core), GuestCheck, GuestLimitDialog,
-    │       │                MemberCheck, ResumeCheckDialog, RiskReportView, ReportSkeleton, RecentChecks
-    │       ├── hooks/       Reserved (.gitkeep)
+    │       ├── components/  GuestCheck (public spec-sheet layout), GuestLimitDialog,
+    │       │                MemberCheck (member work-area layout), CreditRail, ResumeCheckDialog,
+    │       │                CheckFields (search, mint, messages), ReportPanel, RecentChecks (card | sheet),
+    │       │                RiskReportView, ReportSkeleton
+    │       ├── hooks/       use-token-check (state and actions shared by both layouts)
     │       ├── lib/         Address helpers, explorers, formatters, pending-check (guest → member handoff)
     │       └── api.ts       Client → Nest `/checks`, `/checks/recent`, `/tokens/search`
     └── shared/
@@ -86,7 +88,8 @@ apps/web/
         ├── content/         Product copy (landing + check)
         ├── lib/             Small utilities (e.g. cn)
         ├── theme/           Theme storage key + FOUC script
-        └── ui/              SiteHeader, ThemeToggle, FieldReportPreview, Dialog, SignalStrip (six status squares)
+        └── ui/              SiteHeader, ThemeToggle, FieldReportPreview, Dialog, SignalStrip (six status squares),
+                             SpecStrip (six square tiles; landing hero and public check)
 ```
 
 ## `apps/api`
@@ -125,7 +128,6 @@ packages/db/
 
 | Path | Intent | Survival |
 |---|---|---|
-| `apps/web/src/features/token-check/hooks/` | React hooks for the token-check feature (not yet filled) | `.gitkeep` |
 | `apps/web/public/` | Favicon, OG images, static files | keep at least one asset or `.gitkeep` when empty |
 
 When you add a new intentional empty folder, put a `.gitkeep` in it and add a row here.

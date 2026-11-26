@@ -2,18 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useId, useState, type CSSProperties, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import {
   addressValidationMessage,
   isAddressReady,
 } from "@/features/token-check/lib/address";
-import {
-  SAMPLE_CHECK_HREF,
-  SIGNALS,
-  signalLabel,
-} from "@/shared/content/product";
-
-const READ_COUNT = SIGNALS.filter((signal) => signal.readToday).length;
+import { SAMPLE_CHECK_HREF } from "@/shared/content/product";
+import { SpecStrip } from "@/shared/ui/SpecStrip";
 
 /**
  * Landing hero. The mint field only hands the address to /check; the check
@@ -127,40 +122,7 @@ export function LandingHero() {
           </form>
         </div>
 
-        <div className="border-t border-[var(--border)]">
-          <ol aria-label="The six signals a report covers" className="spec-strip">
-            {SIGNALS.map((signal, index) => (
-              <li
-                key={signal.key}
-                className="spec-tile"
-                data-read={signal.readToday}
-                data-lit={(ready && signal.readToday) || undefined}
-                style={{ "--i": index } as CSSProperties}
-              >
-                <span className="spec-num">{signalLabel(index + 1)}</span>
-                <span>
-                  <span className="spec-title">{signal.title}</span>
-                  <span className="spec-state">
-                    {!signal.readToday
-                      ? "No source yet"
-                      : ready
-                        ? "Will read"
-                        : "Read today"}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <p
-          aria-live="polite"
-          className="cell border-t border-[var(--border)] py-4 text-sm text-[var(--muted)]"
-        >
-          {ready
-            ? `Ready: ${READ_COUNT} signals will be read for this mint. LP lock and liquidity show Unknown.`
-            : `${READ_COUNT} of ${SIGNALS.length} signals are read today. LP lock and liquidity show Unknown.`}
-        </p>
+        <SpecStrip ready={ready} />
       </div>
     </section>
   );

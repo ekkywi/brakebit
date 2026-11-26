@@ -107,8 +107,8 @@ export function RiskReportView({
           </div>
           <div className="text-right">
             <p className="text-xs text-white/50">{checkedLocal}</p>
-            <p className="font-mono-ui mt-2 text-[10px] uppercase tracking-wide text-white/45">
-              Solana · {report.cached ? 'cached' : 'live'}
+            <p className="font-mono-ui mt-2 text-xs text-white/55">
+              Solana · {report.cached ? "cached" : "live"}
             </p>
           </div>
         </div>

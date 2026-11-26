@@ -18,13 +18,12 @@ export default function DashboardCheckPage() {
   return (
     <div className="space-y-6">
       <header>
-        <p className="section-label">Assessment workspace</p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[var(--fg)]">
-          Token risk review
+        <h1 className="text-2xl font-semibold tracking-[-0.03em] text-[var(--fg)]">
+          Token check
         </h1>
-        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)]">
-          Search or paste a Solana mint. Reviewed tokens appear in the table;
-          the report opens beside it on desktop.
+        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
+          Live checks use your credits. Reviewed tokens are listed below, and
+          the report opens beside them on desktop.
         </p>
       </header>
 

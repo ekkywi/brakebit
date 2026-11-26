@@ -57,7 +57,9 @@ Why cyan: it sits away from the risk colors (green ok, amber warn, red bad), so 
    - CTA: one row of the sheet, like the sections above: hairline on top, heading at the same scale as Report and Signals, muted paragraph on the left, the two buttons in a cell with a hairline on the left (stacked on the right on desktop). No full-width accent block: the closing section is not a focal tile.
    - Footer: same sheet, two cells separated by a rule.
    The Workflow section was removed because its three numbered steps were the template pattern.
-2. Check (screener-lite): quiet top wash; compact toolbar (search + mint + generate); recently-reviewed table (unique mint, latest score); report as sticky side panel on desktop / stacked on mobile. No price/volume columns.
+2. Check. Two screens on purpose (26 Nov 2026, owner request): the public one is the landing's spec sheet, the member one is an app work area. They share the logic (`useTokenCheck`), the report, and the six-signal numbering; they differ in frame and in what they say about access. No wash or gradient on either. No price/volume columns.
+   - Public `/check` (`GuestCheck`): one `.sheet`, rows split by hairlines. Row 1: mono meta line, "Review a mint" with the square full stop (`aria-label` has a normal period), a short note on the right. Row 2 is the form: visible labels for search and mint, "Review this mint", "Try the BONK example", and an allowance cell with a giant cyan numeral `1` ("free live check per day, no account needed. Cached results are always free."). The numeral is accent text, not a filled tile, so it never touches the lit tiles below. Row 3: the same six-tile strip as the hero (`SpecStrip`); it lights the readable signals once a mint of plausible length is in the field, and it is hidden while a report is open. Then the recently-reviewed table as hairline rows (`RecentChecks variant="sheet"`, edge to edge, first and last column padded like `.cell`). With a report open, the list stays on the left and the report is a sticky panel on the right (one rule between them).
+   - Member `/dashboard/check` (`MemberCheck`): inside the dashboard shell, no sheet, no giant type. The page header is a plain title and one line. Then the credit rail (`CreditRail`): available credits, Promo with its soonest expiry, Top-up, and "One credit per live check. Cached results are free." The numbers come from `/credits/me` and are read again after every check settles, so a spent or refunded credit shows at once. Then the compact toolbar (network, search, mint, Example, "Run check") with the line "A live check uses 1 credit unless the result is already cached." (the button does not say "1 credit" because a cached result is free). Then the table as a card (`RecentChecks variant="card"`) and, when no report is open, the compact six-signal list. Failure for lack of credits links to Overview.
 3. Landing tiles and sheet cells are square-cornered. App cards keep radius `12px`, buttons `999px`, the numbered `sq-index` square `3px`. Content max width `80rem`
 4. Sticky header solid `var(--bg)` + bottom border (no glass)
 
@@ -73,6 +75,8 @@ Limits:
 - Transitions on `background-color` and `color` only. No canvas, no endless animation anywhere on the landing.
 - `prefers-reduced-motion`: the lit tiles appear at once, with no sequence.
 - Everything else keeps MOTION 2: rise on load for the hero headline, hover and selection on board tiles, the reading guide dimming (opacity 0.2s), score bar fill.
+
+Public check strip (`/check`): same rule as the hero. The readable tiles light in order when the mint field holds a mint of plausible length, with the same `prefers-reduced-motion` fallback. Nothing is fetched. The strip is removed while a report is open.
 
 Check workspace (`/check`, `/dashboard/check`), one exception, purpose written down:
 
@@ -103,14 +107,14 @@ A work area, so it stays calm: no grid, no canvas, no blinking. Same tokens, sam
 - Touch targets are 44px, including the theme toggle in the header.
 - Mobile drawer is a modal dialog: Escape closes it, Tab stays inside, focus returns to the menu button.
 - Overview has one job: show what can be spent, then start a check. The credit block leads (total, then Top-up and Promo with the real expiry, then the action). "What one credit buys" lists the six signals. Rules are a plain list. Every number comes from the API; no invented stats, charts, or history.
-- Page headers match the public check page: sentence-case accent label, then the title.
+- Page headers are a plain title with one supporting line. The member check page no longer copies the public page's label and title: the two are different screens (see Layout, item 2).
 
 ## Atmosphere rules
 
 - Squares are the one motif, at two scales: the large tiles (hero strip, board, `4/6` tile, panel) and the small numbered `sq-index` square (3px radius, cyan border and tint) used in reports and lists. Tiles never blink. They change only on hover, selection, and the hero's mint-ready state.
 - One filled cyan block per section is the focal point (Product tile, Signals panel), never two touching. Report and CTA have none; Report's focal point is the dark score face. Do not use a full-width accent band for a section (owner feedback, 25 Nov 2026). Text on it uses `--bg` with no opacity, so contrast stays at the accent/bg ratio (5.59:1 light, 11.44:1 dark).
 - No section is forced dark. Only the report score face (`.instrument-face`) is dark in both themes.
-- Accent squares 01 to 06 always mean the six signals (hero strip, report rows, signals board, check empty state). Source of truth: `SIGNALS` in `shared/content/product.ts`; the number is the position in that list and maps to the API key. Neutral squares (`sq-index--plain`) are for any other numbering, so the two never read as the same thing.
+- Accent squares 01 to 06 always mean the six signals (hero strip, public check strip, report rows, signals board, member check empty state). Source of truth: `SIGNALS` in `shared/content/product.ts`; the number is the position in that list and maps to the API key. Neutral squares (`sq-index--plain`) are for any other numbering, so the two never read as the same thing.
 - Section labels are sentence case, accent color, no uppercase and no wide tracking.
 - The strip is not live data. The line under it says what is read today and what shows Unknown.
 - Sheet, tile, and band colors come from CSS variables so light and dark both work.

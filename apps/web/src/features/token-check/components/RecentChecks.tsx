@@ -9,6 +9,8 @@ type Props = {
   onSelect: (item: RecentCheckItem) => void;
   refreshToken?: number;
   selectedAddress?: string;
+  /** `sheet` sits on the public spec sheet (hairlines); `card` is the member work area. */
+  variant?: "card" | "sheet";
 };
 
 function shortMint(address: string): string {
@@ -49,6 +51,7 @@ export function RecentChecks({
   onSelect,
   refreshToken = 0,
   selectedAddress = "",
+  variant = "card",
 }: Props) {
   const [items, setItems] = useState<RecentCheckItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,12 +78,20 @@ export function RecentChecks({
 
   const selected = selectedAddress.trim();
 
+  const sheet = variant === "sheet";
+
   return (
     <section
-      className="screener-table-card card overflow-hidden"
+      className={sheet ? undefined : "screener-table-card card overflow-hidden"}
       aria-labelledby="recent-checks-heading"
     >
-      <div className="border-b border-[var(--border)] px-4 py-3 sm:px-5">
+      <div
+        className={
+          sheet
+            ? "cell border-b border-[var(--border)] py-4"
+            : "border-b border-[var(--border)] px-4 py-3 sm:px-5"
+        }
+      >
         <p
           id="recent-checks-heading"
           className="section-label"
@@ -94,7 +105,11 @@ export function RecentChecks({
       </div>
 
       <div className="screener-table-scroll">
-        <table className="screener-table">
+        <table
+          className={
+            sheet ? "screener-table screener-table--sheet" : "screener-table"
+          }
+        >
           <thead>
             <tr>
               <th scope="col">Token</th>
