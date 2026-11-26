@@ -60,7 +60,7 @@ pnpm dev
 | Top holder % | RPC `getTokenLargestAccounts`, then optional Rugcheck / Solscan / Birdeye |
 | Mint age (hours) | RPC signatures (phase 1: one page; long history → unknown) |
 | Token name / symbol / logo | Helius DAS `getAsset` when available |
-| LP lock/burn | Rugcheck `markets[].lp`, weighted by USD over pools with an LP token (locked at 95% or more). Pools without an LP token are not counted. Unknown when none. |
+| LP lock/burn | Rugcheck `markets[].lp`, weighted by USD over pools with an LP token (locked at 95% or more). Pools without an LP token are not counted. Unknown when none, or when any pool shows a partial share (above 0 and below 100) that is not verified yet. |
 | Liquidity USD | DexScreener `tokens/{mint}`, summed over Solana pools. Unknown when no pool is listed. |
 
 Search uses Jupiter’s public token search (proxied by the API). Rate limiting applies to `POST /checks` only.

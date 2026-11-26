@@ -21,10 +21,19 @@ describe('lpLockState', () => {
 
   it('is false when the USD-weighted share is below 95', () => {
     const markets = [
-      { lp: { lpMint: LP, lpLockedPct: 60, quoteUSD: 1000 } },
+      { lp: { lpMint: LP, lpLockedPct: 0, quoteUSD: 1000 } },
       { lp: { lpMint: LP, lpLockedPct: 100, quoteUSD: 500 } },
     ];
     expect(lpLockState(markets)).toBe(false);
+  });
+
+  it('is null when any pool has a partial locked share (not verified yet)', () => {
+    const markets = [
+      { lp: { lpMint: LP, lpLockedPct: 100, quoteUSD: 1000 } },
+      { lp: { lpMint: LP, lpLockedPct: 57.94, quoteUSD: 10 } },
+    ];
+    expect(lpLockedSharePct(markets)).toBeNull();
+    expect(lpLockState(markets)).toBeNull();
   });
 
   it('is null when a pool has no locked share or no USD value', () => {

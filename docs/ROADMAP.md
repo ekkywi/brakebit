@@ -53,7 +53,7 @@ Solana only in shared types and UI. Other chains stay off the product surface un
 | Area | Gap |
 |---|---|
 | Mint age | Phase 1 only: full 1000-signature page → age stays unknown (no deep pagination yet) |
-| LP / liquidity | Read since 26 Nov 2026: LP lock from Rugcheck (USD-weighted, 95% threshold, LP-token pools only); liquidity from DexScreener (sum of Solana pools). Unknown when the source has no data |
+| LP / liquidity | Read since 26 Nov 2026: LP lock from Rugcheck (USD-weighted, 95% threshold, LP-token pools only; any mid-range pool, above 0 and below 100, makes it Unknown until verified against lockers); liquidity from DexScreener (sum of Solana pools). Unknown when the source has no data |
 | Auth / per-user history | Recently reviewed is global (anon); per signed-in user history not built |
 | Auth / credits | Phase A wallet login **done**; Phase B Langkah 1–6 **done** in code (campaign lots, ledger, welcome on login, guest quota, credit gate, `/credits/me`, `/dashboard` with balance and guest modal; owner tested the main flow, signed-in check with credits still to record); admin campaign dashboard and USDC top-up still open — [`AUTH.md`](./AUTH.md) |
 | Observability | No request id / provider latency metrics yet |

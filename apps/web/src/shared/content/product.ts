@@ -80,7 +80,7 @@ export const SIGNALS = [
     readToday: true,
     brief: "Share of LP tokens locked or burned.",
     detail:
-      "Read from Rugcheck for pools that issue an LP token, weighted by USD value. Pools without one, such as concentrated-liquidity pools, are not counted. Unknown when no such pool is found.",
+      "Read from Rugcheck for pools that issue an LP token, weighted by USD value. Pools without one, such as concentrated-liquidity pools, are not counted. Unknown when no such pool is found, or when a pool shows a partial locked share that is not verified yet.",
   },
   {
     key: "top_holder_pct",

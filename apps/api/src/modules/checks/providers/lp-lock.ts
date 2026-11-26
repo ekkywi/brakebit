@@ -25,7 +25,9 @@ export type LpLockLookup = {
  * Pools without an LP token (for example Orca Whirlpool or Meteora DLMM) are left
  * out: their lpLockedPct is 0 by default and does not mean "unlocked".
  * Returns null when there is no such pool, when a pool has no USD value or no
- * locked share, or when the total USD weight is 0.
+ * locked share, when the total USD weight is 0, or when any pool has a partial
+ * share (above 0 and below 100). Rugcheck's partial values do not match on-chain
+ * LP balances yet, so they stay Unknown until they are verified.
  */
 export function lpLockedSharePct(markets: RugcheckMarket[]): number | null {
   const pools = markets
@@ -43,6 +45,7 @@ export function lpLockedSharePct(markets: RugcheckMarket[]): number | null {
     const pct = pool.lpLockedPct;
     if (typeof usd !== 'number' || !Number.isFinite(usd) || usd < 0) return null;
     if (typeof pct !== 'number' || !Number.isFinite(pct)) return null;
+    if (pct > 0 && pct < 100) return null;
     weight += usd;
     locked += usd * pct;
   }
@@ -72,7 +75,7 @@ export async function fetchLpLockFromRugcheck(mint: string): Promise<LpLockLooku
     if (locked === null) {
       return {
         locked: null,
-        note: 'LP lock unknown: no pool with an LP token and a USD-weighted locked share from Rugcheck.',
+        note: 'LP lock unknown: no pool with an LP token and a verified USD-weighted locked share from Rugcheck.',
       };
     }
     return { locked, source: 'rugcheck.xyz:markets.lp' };
