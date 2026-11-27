@@ -9,7 +9,7 @@ export function DashboardSkeleton() {
       <p role="status" className="sr-only">
         Loading your dashboard…
       </p>
-      <div className="cell space-y-4 pb-6 pt-8 md:pb-8 md:pt-10" aria-hidden>
+      <div className="cell space-y-3 pb-5 pt-6 md:pb-6 md:pt-8" aria-hidden>
         <div className="h-3 w-56 max-w-full animate-pulse bg-[var(--border)]" />
         <div className="h-10 w-64 max-w-full animate-pulse bg-[var(--border)]" />
       </div>

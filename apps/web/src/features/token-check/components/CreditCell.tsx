@@ -15,7 +15,7 @@ type Props = {
 };
 
 const CELL =
-  "cell flex flex-col justify-between gap-8 border-t border-[var(--border)] py-8 md:border-l md:border-t-0 md:py-10";
+  "cell flex flex-col justify-between gap-6 border-t border-[var(--border)] py-6 md:border-l md:border-t-0 md:py-8";
 
 /**
  * The numeral cell for what can be spent. It sits where the public workspace
@@ -74,7 +74,7 @@ export function CreditCell({
 
   return (
     <div className={`${CELL} ${className}`}>
-      <p className="font-mono-ui text-[clamp(4.5rem,9vw,7rem)] font-medium leading-[0.85] tracking-[-0.06em] tabular-nums text-[var(--accent)]">
+      <p className="font-mono-ui text-[2.5rem] font-medium leading-none tracking-[-0.04em] tabular-nums text-[var(--accent)]">
         <span aria-hidden>{total}</span>
         <span className="sr-only">
           {total} {total === 1 ? "credit" : "credits"} available

@@ -72,7 +72,7 @@ export function MemberCheck() {
           onSubmit={check.submit}
           className="grid border-t border-[var(--border)] md:grid-cols-12"
         >
-          <div className="cell py-8 md:col-span-8 md:py-10">
+          <div className="cell py-6 md:col-span-8 md:py-8">
             <div className="grid gap-5 md:grid-cols-2">
               <SearchField check={check} showLabel />
               <MintField check={check} showLabel />

@@ -44,7 +44,7 @@ export function OverviewView() {
       ) : null}
 
       <div className="grid border-t border-[var(--border)] md:grid-cols-12">
-        <div className="cell flex flex-col justify-between gap-8 py-8 md:col-span-8 md:py-10">
+        <div className="cell flex flex-col justify-between gap-6 py-6 md:col-span-8 md:py-8">
           <Split balance={balance} loading={!balance && status !== "error"} />
           <div>
             <Link
@@ -66,7 +66,7 @@ export function OverviewView() {
       </div>
 
       <section aria-labelledby="credit-buys-title">
-        <div className="cell border-t border-[var(--border)] py-8">
+        <div className="cell border-t border-[var(--border)] py-6">
           <h2
             id="credit-buys-title"
             className="text-lg font-semibold tracking-[-0.02em] text-[var(--fg)]"
@@ -85,7 +85,7 @@ export function OverviewView() {
         aria-labelledby="credit-rules-title"
         className="border-t border-[var(--border)]"
       >
-        <div className="cell py-8">
+        <div className="cell py-6">
           <h2
             id="credit-rules-title"
             className="text-lg font-semibold tracking-[-0.02em] text-[var(--fg)]"

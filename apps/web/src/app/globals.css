@@ -203,19 +203,15 @@ a {
 }
 
 /*
- * The same sheet inside the dashboard: it starts at the sidebar edge instead of
- * centering, and drops the side rules that would double the sidebar's own border.
- * A right rule appears only when the window is wide enough to leave room beside it.
+ * The same sheet inside the dashboard fills the column beside the sidebar.
+ * The column is the frame: keeping the 80rem cap left an empty gutter under a
+ * header that already spans that column. Side rules stay off, because the
+ * sidebar border is the left edge and the window is the right edge.
  */
 .sheet--flush {
+  max-width: none;
   margin-inline: 0;
   border-inline: 0;
-}
-
-@media (min-width: 95rem) {
-  .sheet--flush {
-    border-inline-end: 1px solid var(--border);
-  }
 }
 
 /* Same inline padding as .wrap, so sheet content lines up with the header. */
@@ -233,6 +229,31 @@ a {
   .cell {
     padding-inline: 2.5rem;
   }
+}
+
+/*
+ * Dashboard rows sit at about 80% of the public padding. Browser zoom 80% was
+ * the scale that read as the work area (27 Nov 2026). Body copy and the 44px
+ * controls stay at full size, so this is not a zoom of the whole page.
+ */
+.sheet--flush .cell {
+  padding-inline: 1.2rem;
+}
+
+@media (min-width: 768px) {
+  .sheet--flush .cell {
+    padding-inline: 1.6rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .sheet--flush .cell {
+    padding-inline: 2rem;
+  }
+}
+
+.sheet--flush .spec-num {
+  font-size: 1.125rem;
 }
 
 /* One filled tile per section is the focal point. All text on it uses --bg, no opacity, so contrast stays at the accent/bg ratio. */
@@ -793,6 +814,23 @@ a.nav-link:hover {
 @media (min-width: 1280px) {
   .screener-table--sheet {
     --cell-x: 2.5rem;
+  }
+}
+
+/* Dashboard table columns line up with the tighter .sheet--flush .cell padding. */
+.sheet--flush .screener-table--sheet {
+  --cell-x: 1.2rem;
+}
+
+@media (min-width: 768px) {
+  .sheet--flush .screener-table--sheet {
+    --cell-x: 1.6rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .sheet--flush .screener-table--sheet {
+    --cell-x: 2rem;
   }
 }
 

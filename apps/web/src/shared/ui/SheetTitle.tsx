@@ -14,11 +14,11 @@ type Props = {
 const SCALE = {
   page: {
     row: "anim-rise pb-8 pt-10 md:pb-10 md:pt-14",
-    heading: "text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.95] tracking-[-0.055em]",
+    heading: "mt-5 text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.95] tracking-[-0.055em]",
   },
   app: {
-    row: "pb-6 pt-8 md:pb-8 md:pt-10",
-    heading: "text-[clamp(2rem,4.5vw,3.25rem)] leading-none tracking-[-0.05em]",
+    row: "pb-5 pt-6 md:pb-6 md:pt-8",
+    heading: "mt-3 text-2xl leading-none tracking-[-0.03em]",
   },
 } as const;
 
@@ -39,7 +39,7 @@ export function SheetTitle({ meta, title, note, scale = "page" }: Props) {
         </p>
         <h1
           aria-label={`${title}.`}
-          className={`mt-5 font-semibold text-[var(--fg)] ${s.heading}`}
+          className={`font-semibold text-[var(--fg)] ${s.heading}`}
         >
           <span aria-hidden>
             {title}
