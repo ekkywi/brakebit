@@ -20,7 +20,7 @@ html[data-theme="light"] {
   --btn-primary-hover: #333333;
   --focus-ring: rgba(11, 114, 133, 0.2);
   --elevate: 0 18px 50px rgba(15, 23, 42, 0.08);
-  --radius: 12px;
+  --radius: 0;
   --font-sans:
     var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
@@ -150,9 +150,21 @@ a {
   font-family: var(--font-mono);
 }
 
+/*
+ * UI scale: from 768px up the root is 80%, so every rem value is 20% smaller.
+ * Page width is written as 100rem for that reason: it comes out at 1280px.
+ * Below 768px the root stays 100%, so phones keep full-size text and 44px targets.
+ * Media queries do not follow this root size, so breakpoints are unaffected.
+ */
+@media (min-width: 768px) {
+  html {
+    font-size: 80%;
+  }
+}
+
 .wrap {
   width: 100%;
-  max-width: 80rem;
+  max-width: 100rem;
   margin-inline: auto;
   padding-inline: 1.5rem;
 }
@@ -192,7 +204,7 @@ a {
  * and each section is a row of it, so structure carries the look instead of cards.
  */
 .sheet {
-  max-width: 80rem;
+  max-width: 100rem;
   margin-inline: auto;
 }
 
@@ -203,10 +215,10 @@ a {
 }
 
 /*
- * The same sheet inside the dashboard fills the column beside the sidebar.
- * The column is the frame: keeping the 80rem cap left an empty gutter under a
- * header that already spans that column. Side rules stay off, because the
- * sidebar border is the left edge and the window is the right edge.
+ * Frame for dashboard pages: hairline rows that fill the column beside the
+ * sidebar. The column is the frame: keeping the page width cap left an empty gutter
+ * under a header that already spans that column. Side rules stay off, because
+ * the sidebar border is the left edge and the window is the right edge.
  */
 .sheet--flush {
   max-width: none;
@@ -231,31 +243,6 @@ a {
   }
 }
 
-/*
- * Dashboard rows sit at about 80% of the public padding. Browser zoom 80% was
- * the scale that read as the work area (27 Nov 2026). Body copy and the 44px
- * controls stay at full size, so this is not a zoom of the whole page.
- */
-.sheet--flush .cell {
-  padding-inline: 1.2rem;
-}
-
-@media (min-width: 768px) {
-  .sheet--flush .cell {
-    padding-inline: 1.6rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .sheet--flush .cell {
-    padding-inline: 2rem;
-  }
-}
-
-.sheet--flush .spec-num {
-  font-size: 1.125rem;
-}
-
 /* One filled tile per section is the focal point. All text on it uses --bg, no opacity, so contrast stays at the accent/bg ratio. */
 .focal {
   background: var(--accent);
@@ -273,21 +260,18 @@ a {
   background: var(--border);
 }
 
-/*
- * The strip reflows by its own width, not the window's. Inside the dashboard the
- * sidebar takes 15rem, so a window breakpoint would give six cramped tiles.
- */
+/* The strip reflows by the width of its own row, not the window's. */
 .spec-wrap {
   container-type: inline-size;
 }
 
-@container (min-width: 40rem) {
+@container (min-width: 640px) {
   .spec-strip {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@container (min-width: 64rem) {
+@container (min-width: 1024px) {
   .spec-strip {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -335,7 +319,7 @@ a {
 
 .spec-title {
   display: block;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -344,7 +328,7 @@ a {
 .spec-state {
   display: block;
   margin-top: 0.25rem;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 
@@ -397,7 +381,7 @@ a {
 .guide-item {
   display: block;
   width: 100%;
-  min-height: 44px;
+  min-height: 2.75rem;
   padding: 1rem 0;
   border: 0;
   border-bottom: 1px solid var(--border);
@@ -491,7 +475,7 @@ a {
 
 .sb-title {
   display: block;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.01em;
@@ -500,7 +484,7 @@ a {
 .sb-state {
   display: block;
   margin-top: 0.25rem;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 
@@ -527,14 +511,12 @@ html[data-theme="dark"] .instrument-face {
   height: 4px;
   width: 100%;
   overflow: hidden;
-  border-radius: 999px;
   background: rgba(255, 255, 255, 0.14);
 }
 
 .score-bar > span {
   display: block;
   height: 100%;
-  border-radius: inherit;
   transform-origin: left center;
   animation: bar-fill 0.7s ease-out both;
 }
@@ -544,9 +526,8 @@ html[data-theme="dark"] .instrument-face {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  min-height: 44px;
+  min-height: 2.75rem;
   padding: 0 1.25rem;
-  border-radius: 999px;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -584,7 +565,7 @@ a.btn-secondary {
 }
 
 .btn-sm {
-  min-height: 36px;
+  min-height: 2.25rem;
   padding: 0 0.9rem;
   font-size: 0.85rem;
 }
@@ -593,9 +574,8 @@ a.btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
+  width: 2.25rem;
+  height: 2.25rem;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--fg);
@@ -605,8 +585,8 @@ a.btn-secondary {
 }
 
 .theme-toggle--lg {
-  width: 44px;
-  height: 44px;
+  width: 2.75rem;
+  height: 2.75rem;
 }
 
 .theme-toggle:hover {
@@ -632,9 +612,8 @@ a.nav-link:hover {
 
 .field-input {
   width: 100%;
-  min-height: 44px;
+  min-height: 2.75rem;
   border: 1px solid var(--border);
-  border-radius: 8px;
   background: var(--bg);
   padding: 0 0.9rem;
   font-family: var(--font-mono);
@@ -672,7 +651,6 @@ a.nav-link:hover {
   align-items: center;
   gap: 0.75rem;
   border: 0;
-  border-radius: 8px;
   background: transparent;
   padding: 0.55rem 0.65rem;
   cursor: pointer;
@@ -691,7 +669,6 @@ a.nav-link:hover {
   height: 1.75rem;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
   background: var(--subtle);
   font-size: 0.65rem;
   font-weight: 600;
@@ -797,7 +774,7 @@ a.nav-link:hover {
 }
 
 /*
- * Sheet variant (public check): the table runs edge to edge between the sheet rules,
+ * Sheet variant (public check and dashboard): the table runs edge to edge between the sheet rules,
  * and its first and last columns use the same inline padding as .cell, so text lines
  * up with the rows above it.
  */
@@ -817,23 +794,6 @@ a.nav-link:hover {
   }
 }
 
-/* Dashboard table columns line up with the tighter .sheet--flush .cell padding. */
-.sheet--flush .screener-table--sheet {
-  --cell-x: 1.2rem;
-}
-
-@media (min-width: 768px) {
-  .sheet--flush .screener-table--sheet {
-    --cell-x: 1.6rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .sheet--flush .screener-table--sheet {
-    --cell-x: 2rem;
-  }
-}
-
 .screener-table--sheet th:first-child,
 .screener-table--sheet .screener-row-btn {
   padding-left: var(--cell-x);
@@ -848,7 +808,7 @@ a.nav-link:hover {
   padding-inline: var(--cell-x) !important;
 }
 
-@container (max-width: 39.99rem) {
+@container (max-width: 639px) {
   .screener-col-level,
   .screener-col-checked,
   .screener-col-mint {
@@ -871,22 +831,21 @@ a.nav-link:hover {
   display: inline-grid;
   place-items: center;
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 3px;
+  width: 1.75rem;
+  height: 1.75rem;
   border: 1px solid var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, var(--bg));
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.75rem;
   font-weight: 600;
   line-height: 1;
 }
 
 .sq-index--sm {
-  width: 24px;
-  height: 24px;
-  font-size: 10px;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.75rem;
 }
 
 /* Neutral variant for workflow steps, so accent squares stay the four signals. */

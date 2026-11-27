@@ -52,7 +52,7 @@ export function ReportSection({ preview }: { preview: ReactNode }) {
           <h2 className="mt-4 text-4xl font-semibold leading-[1.02] tracking-[-0.045em] md:text-5xl">
             What a finished review looks like.
           </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-[var(--muted)]">
+          <p className="mt-4 text-[0.9375rem] leading-relaxed text-[var(--muted)]">
             Score, findings, signal details, and sources in one read-only
             report. The figures are an illustration, not a live assessment of
             any token.

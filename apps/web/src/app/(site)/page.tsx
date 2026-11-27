@@ -35,7 +35,7 @@ export default function HomePage() {
             <h2 className="max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] font-semibold leading-[0.96] tracking-[-0.05em]">
               Built for the pause before you commit.
             </h2>
-            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-[var(--muted)]">
+            <p className="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-[var(--muted)]">
               A Solana risk review tool. Not a trading desk, signal feed, or
               wallet.
             </p>
@@ -51,7 +51,7 @@ export default function HomePage() {
                   {READ_COUNT}/{SIGNALS.length}
                 </span>
               </p>
-              <p className="text-[15px] leading-relaxed">
+              <p className="text-[0.9375rem] leading-relaxed">
                 signals have a data source. Any one can still show Unknown
                 for a mint, never clear.
               </p>
@@ -74,7 +74,7 @@ export default function HomePage() {
                     <p className="text-lg font-semibold tracking-[-0.02em] text-[var(--fg)]">
                       {item.title}
                     </p>
-                    <p className="mt-1 text-[15px] leading-relaxed text-[var(--muted)]">
+                    <p className="mt-1 text-[0.9375rem] leading-relaxed text-[var(--muted)]">
                       {item.detail}
                     </p>
                   </li>
@@ -99,7 +99,7 @@ export default function HomePage() {
                     <p className="text-lg font-semibold tracking-[-0.02em] text-[var(--fg)]">
                       {item.title}
                     </p>
-                    <p className="mt-1 text-[15px] leading-relaxed text-[var(--muted)]">
+                    <p className="mt-1 text-[0.9375rem] leading-relaxed text-[var(--muted)]">
                       {item.detail}
                     </p>
                   </li>
@@ -120,7 +120,7 @@ export default function HomePage() {
             <h2 className="text-3xl font-semibold leading-[1.02] tracking-[-0.045em] md:col-span-7 md:text-5xl">
               Six signals. Unknown stays visible.
             </h2>
-            <p className="max-w-md text-[15px] leading-relaxed text-[var(--muted)] md:col-span-5">
+            <p className="max-w-md text-[0.9375rem] leading-relaxed text-[var(--muted)] md:col-span-5">
               Every report lists all six. A signal shows Unknown when its
               source has no data for that mint. Unknown is never counted as clear.
             </p>
@@ -140,7 +140,7 @@ export default function HomePage() {
             <h2 className="text-4xl font-semibold leading-[1.02] tracking-[-0.045em] md:text-5xl">
               Check a token before you commit.
             </h2>
-            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--muted)]">
+            <p className="mt-4 max-w-xl text-[0.9375rem] leading-relaxed text-[var(--muted)]">
               No account required. Solana is the only network Brakebit reads
               today. Use the token mint, not a wallet, and verify findings on
               Solscan.

@@ -141,14 +141,14 @@ export function RiskReportView({
               alt=""
               width={40}
               height={40}
-              className="h-10 w-10 shrink-0 rounded-[10px] object-cover ring-1 ring-white/15"
+              className="h-10 w-10 shrink-0 object-cover ring-1 ring-white/15"
               loading="lazy"
               referrerPolicy="no-referrer"
             />
           ) : (
             <span
               aria-hidden
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-white/10 text-xs font-medium text-white/55"
+              className="flex h-10 w-10 shrink-0 items-center justify-center bg-white/10 text-xs font-medium text-white/55"
             >
               {(report.token?.symbol ?? "?").slice(0, 2).toUpperCase()}
             </span>
@@ -165,7 +165,7 @@ export function RiskReportView({
             <p className="font-mono-ui mt-1 break-all text-xs text-white/55">
               {chainLabel(report.chain)} · {report.address}
             </p>
-            <p className="mt-1 text-[11px] text-white/55">
+            <p className="mt-1 text-xs text-white/55">
               Confirm name and mint match the token you intend to review.
             </p>
           </div>
@@ -208,7 +208,7 @@ export function RiskReportView({
             <li key={reason.code} className="flex gap-3">
               <span
                 aria-hidden
-                className="mt-1.5 h-2 w-2 shrink-0 rounded-full"
+                className="mt-1.5 h-2 w-2 shrink-0"
                 style={{ background: levelColor(reason.severity) }}
               />
               <div>

@@ -77,7 +77,7 @@ export function FieldReportPreview() {
         <div className="mt-5 flex items-start gap-3">
           <span
             aria-hidden
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-white/10 text-xs font-medium text-white/55"
+            className="flex h-10 w-10 shrink-0 items-center justify-center bg-white/10 text-xs font-medium text-white/55"
           >
             BK
           </span>
@@ -110,7 +110,7 @@ export function FieldReportPreview() {
             <li key={item.title} className="flex gap-3">
               <span
                 aria-hidden
-                className="mt-1.5 h-2 w-2 shrink-0 rounded-full"
+                className="mt-1.5 h-2 w-2 shrink-0"
                 style={{ background: item.color }}
               />
               <div>

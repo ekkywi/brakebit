@@ -59,7 +59,7 @@ export function LandingHero() {
         </div>
 
         <div className="grid border-t border-[var(--border)] md:grid-cols-12">
-          <p className="cell py-8 text-[17px] leading-relaxed text-[var(--muted)] md:col-span-5 md:border-r md:border-[var(--border)] md:py-10">
+          <p className="cell py-8 text-[1.0625rem] leading-relaxed text-[var(--muted)] md:col-span-5 md:border-r md:border-[var(--border)] md:py-10">
             Paste a Solana mint, get a risk report with findings and signals.
             Indicators only. Not investment advice.
           </p>

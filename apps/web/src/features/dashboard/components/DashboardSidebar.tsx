@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DASHBOARD_NAV, isNavItemActive } from "../nav";
-import { BrandMark, NavIcon } from "./icons";
+import { BrandMark } from "@/shared/ui/BrandMark";
+import { NavIcon } from "./icons";
 
 type Props = {
   pathname: string;
@@ -33,7 +34,7 @@ export function DashboardSidebar({
           href="/dashboard"
           onClick={onNavigate}
           title={collapsed ? "Brakebit" : undefined}
-          className={`flex min-h-11 items-center gap-2.5 rounded-lg text-[15px] font-semibold tracking-[-0.02em] text-[var(--fg)] ${
+          className={`flex min-h-11 items-center gap-2.5 text-[0.9375rem] font-semibold tracking-[-0.02em] text-[var(--fg)] ${
             collapsed ? "justify-center" : "px-2"
           }`}
         >
@@ -55,7 +56,7 @@ export function DashboardSidebar({
               onClick={onNavigate}
               aria-current={active ? "page" : undefined}
               title={collapsed ? item.label : undefined}
-              className={`flex min-h-11 items-center gap-3 rounded-lg border text-sm transition-colors ${
+              className={`flex min-h-11 items-center gap-3 border text-sm transition-colors ${
                 collapsed ? "justify-center px-0" : "px-3"
               } ${
                 active

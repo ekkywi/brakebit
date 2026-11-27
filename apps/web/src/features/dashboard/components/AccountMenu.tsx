@@ -43,7 +43,7 @@ export function AccountMenu() {
     return loading ? (
       <span
         aria-hidden
-        className="block h-11 w-11 animate-pulse rounded-full border border-[var(--border)]"
+        className="block h-11 w-11 animate-pulse border border-[var(--border)]"
       />
     ) : null;
   }
@@ -74,7 +74,7 @@ export function AccountMenu() {
         aria-expanded={open}
         aria-controls={panelId}
         aria-label="Account menu"
-        className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] text-[var(--fg)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        className="flex h-11 w-11 items-center justify-center border border-[var(--border)] text-[var(--fg)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
       >
         <UserIcon size={18} />
       </button>

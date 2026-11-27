@@ -54,14 +54,14 @@ export function SignInButton() {
       </button>
       {error ? (
         <p
-          className="max-w-[14rem] text-right text-[11px] text-[var(--bad)]"
+          className="max-w-[14rem] text-right text-xs text-[var(--bad)]"
           role="alert"
         >
           {error}
         </p>
       ) : null}
       {!hasPhantom ? (
-        <p className="max-w-[14rem] text-right text-[11px] text-[var(--muted)]">
+        <p className="max-w-[14rem] text-right text-xs text-[var(--muted)]">
           Phantom required
         </p>
       ) : null}

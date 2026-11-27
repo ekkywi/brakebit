@@ -15,14 +15,14 @@ export function ReportSkeleton() {
     >
       <div className="instrument-face p-6">
         <p className="text-xs text-white/55">Reading signals…</p>
-        <div className="mt-4 h-14 w-28 animate-pulse rounded bg-white/10" />
-        <div className="mt-4 h-4 w-36 animate-pulse rounded bg-white/10" />
+        <div className="mt-4 h-14 w-28 animate-pulse bg-white/10" />
+        <div className="mt-4 h-4 w-36 animate-pulse bg-white/10" />
         <div className="score-bar mt-4 max-w-md">
           <span className="w-1/3 animate-pulse bg-white/25" />
         </div>
         <div className="mt-5 space-y-2">
-          <div className="h-3 max-w-xl animate-pulse rounded bg-white/10" />
-          <div className="h-3 max-w-md animate-pulse rounded bg-white/10" />
+          <div className="h-3 max-w-xl animate-pulse bg-white/10" />
+          <div className="h-3 max-w-md animate-pulse bg-white/10" />
         </div>
       </div>
 
@@ -46,10 +46,10 @@ export function ReportSkeleton() {
         <ul className="mt-4 space-y-4">
           {[0, 1, 2].map((i) => (
             <li key={i} className="flex gap-3">
-              <span className="mt-1.5 h-2 w-2 shrink-0 animate-pulse rounded-full bg-[var(--border)]" />
+              <span className="mt-1.5 h-2 w-2 shrink-0 animate-pulse bg-[var(--border)]" />
               <div className="flex-1 space-y-2">
-                <div className="h-3 w-[40%] animate-pulse rounded bg-[var(--border)]" />
-                <div className="h-3 w-[80%] animate-pulse rounded bg-[var(--border)]" />
+                <div className="h-3 w-[40%] animate-pulse bg-[var(--border)]" />
+                <div className="h-3 w-[80%] animate-pulse bg-[var(--border)]" />
               </div>
             </li>
           ))}
@@ -70,7 +70,7 @@ export function ReportSkeleton() {
                 </span>
                 {signal.field}
               </span>
-              <span className="h-3 w-16 animate-pulse rounded bg-[var(--border)]" />
+              <span className="h-3 w-16 animate-pulse bg-[var(--border)]" />
             </li>
           ))}
         </ul>

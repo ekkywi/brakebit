@@ -150,7 +150,7 @@ export function RecentChecks({
                               alt=""
                               width={28}
                               height={28}
-                              className="h-7 w-7 shrink-0 rounded-md object-cover"
+                              className="h-7 w-7 shrink-0 object-cover"
                               loading="lazy"
                               referrerPolicy="no-referrer"
                             />
@@ -163,7 +163,7 @@ export function RecentChecks({
                             <span className="block truncate text-sm text-[var(--fg)]">
                               {label}
                             </span>
-                            <span className="font-mono-ui mt-0.5 block truncate text-[11px] text-[var(--muted)] sm:hidden">
+                            <span className="font-mono-ui mt-0.5 block truncate text-xs text-[var(--muted)] sm:hidden">
                               {shortMint(item.address)}
                             </span>
                           </span>
@@ -188,7 +188,7 @@ export function RecentChecks({
                         </span>
                       </td>
                       <td className="screener-col-mint">
-                        <span className="font-mono-ui text-[11px] text-[var(--muted)]">
+                        <span className="font-mono-ui text-xs text-[var(--muted)]">
                           {shortMint(item.address)}
                         </span>
                       </td>

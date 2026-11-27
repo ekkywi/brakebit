@@ -26,7 +26,7 @@ export function ResumeCheckDialog({ mint, onConfirm, onClose }: Props) {
       onClose={onClose}
       initialFocusRef={confirmRef}
     >
-      <p className="font-mono-ui mt-4 break-all rounded-lg bg-[var(--subtle)] p-3 text-xs text-[var(--fg)]">
+      <p className="font-mono-ui mt-4 break-all bg-[var(--subtle)] p-3 text-xs text-[var(--fg)]">
         {mint}
       </p>
 

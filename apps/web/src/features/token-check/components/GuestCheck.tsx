@@ -70,7 +70,7 @@ export function GuestCheck() {
             >
               <span aria-hidden>1</span>
             </p>
-            <p className="text-[15px] leading-relaxed text-[var(--muted)]">
+            <p className="text-[0.9375rem] leading-relaxed text-[var(--muted)]">
               free live check per day, no account needed. Cached results are
               always free.
             </p>

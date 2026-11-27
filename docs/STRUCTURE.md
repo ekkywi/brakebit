@@ -66,8 +66,8 @@ apps/web/
     │   ├── dashboard/       User app shell: sidebar, header, account menu, mobile drawer
     │   │   ├── components/  DashboardShell (chrome first, content skeleton while session loads),
     │   │   │                DashboardSidebar, DashboardHeader, AccountMenu, MobileNavDrawer,
-    │   │   │                DashboardSkeleton, OverviewView (spec sheet: title row, credit numeral cell, six signals),
-    │   │   │                icons.tsx (in-house icon set + BrandMark)
+    │   │   │                DashboardSkeleton, OverviewView (balance blocks, action, credit rules),
+    │   │   │                icons.tsx (in-house icon set)
     │   │   ├── sidebar-cookie.ts  `brakebit_sidebar` cookie: collapsed or expanded
     │   │   └── nav.ts       Sidebar items (label, href, icon name) and page titles (add a feature here)
 │   ├── landing/         Landing client components (see DESIGN.md, Layout and Motion)
@@ -76,7 +76,7 @@ apps/web/
 │   │                    Sheet and tile styles (`.sheet`, `.cell`, `.focal`, `.spec-*`, `.sb-*`) live in globals.css
     │   └── token-check/     Token review feature slice
     │       ├── components/  GuestCheck (public sheet), GuestLimitDialog,
-    │       │                MemberCheck (same sheet in the dashboard), CreditCell (credit numeral cell), ResumeCheckDialog,
+    │       │                MemberCheck (plain work page in the dashboard), CreditLine (three balance blocks), ResumeCheckDialog,
     │       │                CheckResults (list + report split, shared), CheckFields (search, mint, messages, example),
     │       │                ReportPanel, RecentChecks, RiskReportView, ReportSkeleton
     │       ├── hooks/       use-token-check (state and actions shared by both pages)
@@ -88,9 +88,9 @@ apps/web/
         ├── content/         Product copy (landing + check)
         ├── lib/             Small utilities (e.g. cn)
         ├── theme/           Theme storage key + FOUC script
-        └── ui/              SiteHeader, ThemeToggle, FieldReportPreview, Dialog, SignalStrip (six status squares),
-                             SpecStrip (six square tiles; landing, both check pages, Overview),
-                             SheetTitle (first row of a sheet: meta line, title with square stop, note)
+        └── ui/              SiteHeader, BrandMark (four squares; header, footer, sidebar), ThemeToggle, FieldReportPreview, Dialog, SignalStrip (six status squares),
+                             SpecStrip (six square tiles; landing and public check),
+                             SheetTitle (first row of a public sheet: meta line, title with square stop, note)
 ```
 
 ## `apps/api`

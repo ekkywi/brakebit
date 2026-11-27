@@ -1,7 +1,7 @@
 /**
  * Content placeholder while the session loads. Sidebar and header are already
- * on screen, so only this area waits. It has the sheet's shape: a title row,
- * then one hairline-bounded block.
+ * on screen, so only this area waits. It has the page's shape: one block of
+ * rows between hairlines.
  */
 export function DashboardSkeleton() {
   return (
@@ -9,14 +9,10 @@ export function DashboardSkeleton() {
       <p role="status" className="sr-only">
         Loading your dashboard…
       </p>
-      <div className="cell space-y-3 pb-5 pt-6 md:pb-6 md:pt-8" aria-hidden>
-        <div className="h-3 w-56 max-w-full animate-pulse bg-[var(--border)]" />
-        <div className="h-10 w-64 max-w-full animate-pulse bg-[var(--border)]" />
+      <div className="cell space-y-4 py-6 md:py-8" aria-hidden>
+        <div className="h-4 w-24 animate-pulse bg-[var(--border)]" />
+        <div className="h-36 animate-pulse border-y border-[var(--border)] bg-[var(--subtle)]" />
       </div>
-      <div
-        className="h-56 animate-pulse border-t border-[var(--border)] bg-[var(--subtle)]"
-        aria-hidden
-      />
     </div>
   );
 }

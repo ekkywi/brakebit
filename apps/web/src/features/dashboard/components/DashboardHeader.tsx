@@ -19,7 +19,7 @@ type Props = {
  * Tailwind layer, so it beats `md:hidden` and the button showed on every width.
  */
 const MENU_BUTTON =
-  "items-center justify-center rounded-lg border border-transparent min-h-11 min-w-11 text-[var(--muted)] transition-colors hover:border-[var(--border)] hover:text-[var(--fg)]";
+  "items-center justify-center border border-transparent min-h-11 min-w-11 text-[var(--muted)] transition-colors hover:border-[var(--border)] hover:text-[var(--fg)]";
 
 /**
  * Sticky header for the dashboard. Separate from the marketing header.

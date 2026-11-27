@@ -55,7 +55,7 @@ export function SearchField({ check, showLabel = false }: FieldProps) {
                     alt=""
                     width={28}
                     height={28}
-                    className="h-7 w-7 rounded-md object-cover"
+                    className="h-7 w-7 object-cover"
                     loading="lazy"
                     referrerPolicy="no-referrer"
                   />
@@ -69,7 +69,7 @@ export function SearchField({ check, showLabel = false }: FieldProps) {
                     {hit.name}{" "}
                     <span className="text-[var(--muted)]">({hit.symbol})</span>
                   </span>
-                  <span className="font-mono-ui block truncate text-[11px] text-[var(--muted)]">
+                  <span className="font-mono-ui block truncate text-xs text-[var(--muted)]">
                     {hit.mint}
                   </span>
                 </span>

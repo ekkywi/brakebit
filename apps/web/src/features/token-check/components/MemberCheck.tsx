@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCreditBalance } from "@/features/credits/use-credit-balance";
-import { SheetTitle } from "@/shared/ui/SheetTitle";
-import { SpecStrip } from "@/shared/ui/SpecStrip";
 import { useTokenCheck } from "../hooks/use-token-check";
 import { takePendingCheck } from "../lib/pending-check";
 import {
@@ -14,7 +12,7 @@ import {
   SearchField,
 } from "./CheckFields";
 import { CheckResults } from "./CheckResults";
-import { CreditCell } from "./CreditCell";
+import { CreditLine } from "./CreditLine";
 import { ResumeCheckDialog } from "./ResumeCheckDialog";
 
 function creditsAction(code: string | null) {
@@ -30,10 +28,10 @@ function creditsAction(code: string | null) {
 }
 
 /**
- * Check workspace for signed-in users, inside the dashboard shell. It is the
- * same spec sheet as `GuestCheck`: title row, form with a numeral cell, tiles,
- * then the reviewed list with the report beside it. The numeral cell shows
- * credits here instead of the one free check. Live checks spend credits.
+ * Check workspace for signed-in users, inside the dashboard shell. It is a work
+ * area, so it holds only what the job needs: the balance, the form, then the
+ * reviewed list with the report beside it. No title block and no explainer
+ * tiles; the header already names the page. Live checks spend credits.
  */
 export function MemberCheck() {
   const consumedRef = useRef(false);
@@ -61,46 +59,35 @@ export function MemberCheck() {
   return (
     <>
       <div className="sheet sheet--flush">
-        <SheetTitle
-          scale="app"
-          meta="Solana · live check · uses credits"
-          title="Token check"
-          note="Live checks use your credits. Reviewed tokens are listed below, and the report opens beside them on wide screens."
+        <h1 className="sr-only">Token check</h1>
+
+        <CreditLine
+          balance={balance}
+          status={status}
+          onRetry={() => void reload()}
         />
 
-        <form
-          onSubmit={check.submit}
-          className="grid border-t border-[var(--border)] md:grid-cols-12"
-        >
-          <div className="cell py-6 md:col-span-8 md:py-8">
-            <div className="grid gap-5 md:grid-cols-2">
-              <SearchField check={check} showLabel />
-              <MintField check={check} showLabel />
-            </div>
-            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-1">
-              <button
-                type="submit"
-                disabled={check.loading || !check.ready}
-                className="btn btn-primary"
-              >
-                {check.loading ? "Checking…" : "Run check"}
-              </button>
-              <SampleButton check={check} />
-            </div>
-            <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">
-              A live check uses 1 credit unless the result is already cached.
-            </p>
-            <div className="mt-4">
-              <FieldMessages check={check} />
-            </div>
+        <form onSubmit={check.submit} className="cell py-5 md:py-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            <SearchField check={check} showLabel />
+            <MintField check={check} showLabel />
           </div>
-
-          <CreditCell
-            balance={balance}
-            status={status}
-            onRetry={() => void reload()}
-            className="md:col-span-4"
-          />
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1">
+            <button
+              type="submit"
+              disabled={check.loading || !check.ready}
+              className="btn btn-primary"
+            >
+              {check.loading ? "Checking…" : "Run check"}
+            </button>
+            <SampleButton check={check} />
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-[var(--muted)]">
+            A live check uses 1 credit unless the result is already cached.
+          </p>
+          <div className="mt-3">
+            <FieldMessages check={check} />
+          </div>
         </form>
 
         {check.error ? (
@@ -111,8 +98,6 @@ export function MemberCheck() {
             {creditsAction(check.errorCode)}
           </div>
         ) : null}
-
-        {check.showPanel ? null : <SpecStrip ready={check.ready} />}
 
         <CheckResults check={check} where="app" />
       </div>

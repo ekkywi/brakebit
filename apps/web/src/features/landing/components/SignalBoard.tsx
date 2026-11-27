@@ -60,7 +60,7 @@ export function SignalBoard() {
             <span className="sr-only">{signalLabel(selected + 1)} · </span>
             {current.title}
           </p>
-          <p className="mt-3 text-[15px] leading-relaxed">{current.detail}</p>
+          <p className="mt-3 text-[0.9375rem] leading-relaxed">{current.detail}</p>
           <p className="mt-5 border-t border-[color-mix(in_srgb,var(--bg)_45%,transparent)] pt-4 text-sm leading-relaxed">
             {current.readToday
               ? "Read from its source when the mint allows it. If the source has no data for this mint, the row shows Unknown."
