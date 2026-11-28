@@ -8,12 +8,14 @@ import {
   Post,
   Query,
   Req,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { SESSION_COOKIE } from '../auth/auth.constants';
 import { ChecksService } from './checks.service';
 import { CreateCheckDto } from './dto/create-check.dto';
+import { UserFacingCheckError } from './check-errors';
 
 @Controller('checks')
 export class ChecksController {
@@ -30,7 +32,7 @@ export class ChecksController {
       dto = CreateCheckDto.parse(body);
     } catch (error) {
       throw new BadRequestException({
-        code: `INVALID_CHECK_REQUEST`,
+        code: 'INVALID_CHECK_REQUEST',
         message: error instanceof Error ? error.message : 'Invalid request',
       });
     }
@@ -45,9 +47,15 @@ export class ChecksController {
       });
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      throw new BadRequestException({
-        code: 'INVALID_CHECK_REQUEST',
-        message: error instanceof Error ? error.message : 'Invalid request',
+      if (error instanceof UserFacingCheckError) {
+        throw new BadRequestException({
+          code: 'INVALID_CHECK_REQUEST',
+          message: error.message,
+        });
+      }
+      throw new ServiceUnavailableException({
+        code: 'CHECK_UNAVAILABLE',
+        message: 'We could not read this mint right now. Try again in a moment.',
       });
     }
   }

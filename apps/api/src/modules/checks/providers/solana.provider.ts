@@ -19,6 +19,7 @@ import {
 } from './top-holder-sources';
 import { fetchMarketLiquidityUsd } from './market-liquidity';
 import { fetchLpLockFromRugcheck } from './lp-lock';
+import { UserFacingCheckError } from '../check-errors';
 
 function resolveTokenProgram(owner: PublicKey) {
   if (owner.equals(TOKEN_2022_PROGRAM_ID)) return TOKEN_2022_PROGRAM_ID;
@@ -193,7 +194,7 @@ export class SolanaTokenProvider {
     try {
       mintPubkey = new PublicKey(address);
     } catch {
-      throw new Error('Invalid Solana mint address');
+      throw new UserFacingCheckError('Invalid Solana mint address');
     }
 
     const connection = new Connection(rpcUrl, {
@@ -205,14 +206,14 @@ export class SolanaTokenProvider {
       connection.getAccountInfo(mintPubkey),
     );
     if (!accountInfo) {
-      throw new Error(
+      throw new UserFacingCheckError(
         'No account at this address on Solana. Check that you pasted a live mint.',
       );
     }
 
     const tokenProgram = resolveTokenProgram(accountInfo.owner);
     if (!tokenProgram) {
-      throw new Error(
+      throw new UserFacingCheckError(
         'This address is not an SPL Token or Token-2022 mint.',
       );
     }

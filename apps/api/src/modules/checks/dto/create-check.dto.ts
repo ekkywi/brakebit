@@ -1,5 +1,9 @@
 import { isSupportedChain, type Chain } from '@brakebit/shared';
 
+/** Base58 alphabet used by Solana addresses: no 0, O, I, or l. */
+const BASE58 = /^[1-9A-HJ-NP-Za-km-z]+$/;
+
+
 export class CreateCheckDto {
   address!: string;
   chain?: Chain;
@@ -33,6 +37,9 @@ export class CreateCheckDto {
   private static assertAddress(address: string): void {
     if (address.length < 32 || address.length > 64) {
       throw new Error('address looks invalid for a Solana mint');
+    }
+    if (!BASE58.test(address)) {
+      throw new Error('address has characters Solana does not use');
     }
   }
 }
